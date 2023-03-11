@@ -5,7 +5,7 @@ from collections import namedtuple
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
 
-from mesh import ConcentricPlaneStressMesh
+from concentric_plane_stress_mesh import ConcentricPlaneStressMesh
 from results import Displacement, Force, Result, Strain, Stress
 
 _ENTRY_LENGTH = 12

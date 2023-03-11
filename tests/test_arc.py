@@ -1,7 +1,7 @@
 import math
 import unittest
 
-from arc import Arc
+from curves import Arc
 
 
 class TestMesh(unittest.TestCase):

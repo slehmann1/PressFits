@@ -1,8 +1,8 @@
 import math
 import unittest
 
-from arc import Arc
-from mesh import ConcentricPlaneStressMesh, PSElement
+from concentric_plane_stress_mesh import ConcentricPlaneStressMesh, PSElement
+from curves import Arc
 from node import Node
 
 

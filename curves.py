@@ -7,14 +7,61 @@ from node import Node
 FP_ALLOWANCE = 0.01
 
 
-class Arc:
+class Curve:
+    def __init__(self):
+
+        self.nodes = []
+
+    def get_node_ids(self):
+        """Gets a list of every node id in the curve
+
+        Returns:
+            list(Int): List of node IDs
+        """
+        return [node.id for node in self.nodes]
+
+    def node_by_id(self, id):
+        """Gets a node within the curve based on the node ID
+
+        Args:
+            id (int): ID of the node
+
+        Returns:
+            Node: Node with the given id
+        """
+        return self.nodes[id - self.nodes[0].id]
+
+
+class HorizontalLine(Curve):
+    def __init__(self, node_spacing, start_x, end_x, y, part=0):
+        """Creates a series of nodes in a horizontal line at the given radius
+
+        Args:
+            node_spacing (float): Spacing between each node
+            start_x (float): X value to start the line at
+            end_x (float): X value to end the line at
+            y (float): Line y-value
+            part (int): The number of the part. Defaults to 0.
+
+        Returns:
+            list(node): A list of nodes
+        """
+        super().__init__()
+
+        num_vals = int(round((end_x - start_x) / node_spacing, 0)) + 1
+
+        nodes = [Node(x, y, part=part) for x in np.linspace(start_x, end_x, num_vals)]
+        self.nodes = nodes
+
+
+class Arc(Curve):
     def __init__(
         self, angular_spacing, radius, start_angle=0.0, end_angle=math.pi / 2, part=0
     ):
         """Creates a series of nodes in a circular arc centred at 0,0
 
         Args:
-            angular_spacing (float): Spacing between each node in degrees
+            angular_spacing (float): Spacing between each node in radians
             radius (float): Arc radius
             start_angle (float, optional): Angle to start the arc at, measured from +X axis. Defaults to 0.
             end_angle (float, optional): Angle to end the arc at, measured from +X axis. Defaults to pi/2.
@@ -23,6 +70,7 @@ class Arc:
         Returns:
             list(node): A list of nodes
         """
+        super().__init__()
         if radius == 0:
             raise ValueError("Non-zero radius must be provided")
 
@@ -36,14 +84,6 @@ class Arc:
         self.nodes = nodes
         self.angular_spacing = angular_spacing
         self.start_angle = start_angle
-
-    def get_node_ids(self):
-        """Gets a list of every node id in the arc
-
-        Returns:
-            list(Int): List of node IDs
-        """
-        return [node.id for node in self.nodes]
 
     def get_anticlockwise_id(self):
         """Gets the id of the most anticlockwise node
@@ -73,17 +113,6 @@ class Arc:
             (x, y): In 2D coordinates
         """
         return math.cos(angle) * radius, math.sin(angle) * radius
-
-    def node_by_id(self, id):
-        """Gets a node within the arc based on the node ID
-
-        Args:
-            id (int): ID of the node
-
-        Returns:
-            Node: Node with the given id
-        """
-        return self.nodes[id - self.nodes[0].id]
 
     def node_by_angle(self, angle):
         """Gets the node with the given ID
