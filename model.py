@@ -5,7 +5,7 @@ from collections import namedtuple
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
 
-from mesh import ConcentricMesh
+from mesh import ConcentricPlaneStressMesh
 from results import Displacement, Force, Result, Strain, Stress
 
 _ENTRY_LENGTH = 12
@@ -16,7 +16,7 @@ Material = namedtuple("Material", "name youngs_modulus poissons_ratio density")
 
 class PressFitModel:
     def __init__(self, id_0, id_1, od_0, od_1, name):
-        self.mesh = ConcentricMesh(id_0, id_1, od_0, od_1)
+        self.mesh = ConcentricPlaneStressMesh(id_0, id_1, od_0, od_1)
         self.name = name
         self.elements = self.mesh.get_elements()
         self.nodes = self.mesh.get_nodes()
@@ -120,16 +120,12 @@ class PressFitModel:
 
         block = block[skip_lines:]
 
-        f = open("demofile2.txt", "a")
-
         for line in block[1:]:
             node_id, vals = get_nodal_values(line)
-            f.write(f"{line} NODES: {len(self.nodes)}")
             if key not in self.nodes[node_id - 1].results:
                 self.nodes[node_id - 1].results[key] = Result()
 
             act_on_results(self.nodes[node_id - 1].results[key], vals)
-        f.close()
 
     @staticmethod
     def nodal_plot(x, y, values, title):

@@ -1,13 +1,21 @@
-class PSElement:
-    """An eight node plane stress element"""
+class Element:
+    """An 8 Node Element"""
 
     _element_count = 1
 
     def __init__(self, nodes=None):
         self.nodes = [] if nodes is None else nodes
-        self.id = PSElement._element_count
+        self.id = Element._element_count
         self.results = []
-        PSElement._element_count += 1
+        Element._element_count += 1
+
+    @staticmethod
+    def reset_element_count():
+        Element._element_count = 1
+
+    @staticmethod
+    def get_element_count():
+        return Element._element_count
 
     def add_node(self, node):
         """Add a node to the element. Must be added in the order outlined by
@@ -34,17 +42,8 @@ class PSElement:
         string += ", ".join(str(node.id) for node in self.nodes)
         return string
 
-    def get_radius(self):
-        """Returns distance from the bottom left node to point (x,y) = (0,0)
-
-        Returns:
-            float: Euclidean distance
-        """
-        f = (self.nodes[0].x ** 2 + self.nodes[0].y ** 2) ** 0.5
-        return (self.nodes[0].x ** 2 + self.nodes[0].y ** 2) ** 0.5
-
     def get_corner_nodes(self):
-        return self.nodes[0:4]
+        return self.nodes[:4]
 
     def get_face_nodes(self, face_number):
         """Returns corner nodes for a specified face. Does not return middle node.
@@ -67,6 +66,18 @@ class PSElement:
         elif face_number == 4:
             return [self.nodes[3], self.nodes[0]]
 
-    @staticmethod
-    def reset_element_count():
-        PSElement._element_count = 1
+
+class PSElement(Element):
+    """An eight node plane stress element"""
+
+    def __init__(self, nodes=None):
+        super().__init__(nodes)
+
+    def get_radius(self):
+        """Returns distance from the bottom left node to point (x,y) = (0,0)
+
+        Returns:
+            float: Euclidean distance
+        """
+        f = (self.nodes[0].x ** 2 + self.nodes[0].y ** 2) ** 0.5
+        return (self.nodes[0].x ** 2 + self.nodes[0].y ** 2) ** 0.5

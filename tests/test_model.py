@@ -1,9 +1,9 @@
 import unittest
 
 import model
+from element import PSElement
 from model import Material, PressFitModel
 from node import Node
-from plane_stress_element import PSElement
 
 
 class TestModel(unittest.TestCase):

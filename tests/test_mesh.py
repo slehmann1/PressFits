@@ -2,7 +2,7 @@ import math
 import unittest
 
 from arc import Arc
-from mesh import ConcentricMesh, PSElement
+from mesh import ConcentricPlaneStressMesh, PSElement
 from node import Node
 
 
@@ -13,8 +13,12 @@ class TestMesh(unittest.TestCase):
 
     def test_get_arc_edge_ids(self):
         arcs = [Arc(math.pi / 8, radius, 0) for radius in range(1, 5)]
-        vertical_ids = ConcentricMesh._get_arc_edge_ids(arcs, is_acw_edge=True)
-        horizontal_ids = ConcentricMesh._get_arc_edge_ids(arcs, is_acw_edge=False)
+        vertical_ids = ConcentricPlaneStressMesh._get_arc_edge_ids(
+            arcs, is_acw_edge=True
+        )
+        horizontal_ids = ConcentricPlaneStressMesh._get_arc_edge_ids(
+            arcs, is_acw_edge=False
+        )
 
         self.assertEqual(len(vertical_ids), len(arcs))
         self.assertEqual(len(horizontal_ids), len(arcs))
@@ -87,7 +91,7 @@ class TestMesh(unittest.TestCase):
             elements (list[Element]): A list of elements to compare the mesh.get_elements values against
         """
         arcs = [Arc(angular_spacing, radius, 0) for radius in range(id, od + 1)]
-        test_elements = ConcentricMesh._gen_elements(
+        test_elements = ConcentricPlaneStressMesh._gen_elements(
             arcs, angular_spacing=angular_spacing
         )
         self.assertEqual(len(test_elements[0].nodes), len(elements[0].nodes))
