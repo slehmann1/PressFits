@@ -7,8 +7,10 @@ import arc as arc
 from arc import Arc
 from plane_stress_element import PSElement
 
-_ARCS_PER_PART = 125
-_ANGULAR_SPACING = math.pi / 80
+_ARCS_PER_PART = 47
+_ANGULAR_SPACING = math.pi / 16
+_INFLATION_LAYERS = 3
+
 YOUNGS_MODULUS = 210000000000
 POISSONS_RATIO = 0.3
 DENSITY = 7800
@@ -65,13 +67,79 @@ class ConcentricMesh:
             list(Arc): A list of Arcs
         """
         # TODO: Support parts that start at 0,0
-        arc_spacing = (outer_radius - inner_radius) / (_ARCS_PER_PART - 1)
+        arc_spacing = (outer_radius - inner_radius) / (_ARCS_PER_PART)
 
         arcs = []
 
-        for i in range(_ARCS_PER_PART):
+        if _INFLATION_LAYERS != 0:
+            if part_num == 0:
+                # Inner part, inflate outside
+                ConcentricMesh._add_arcs_for_part(
+                    arcs,
+                    inner_radius,
+                    arc_spacing,
+                    _ARCS_PER_PART - 1,
+                    angular_spacing,
+                    part_num,
+                )
+                ConcentricMesh._add_arcs_for_part(
+                    arcs,
+                    outer_radius - arc_spacing + (arc_spacing / _INFLATION_LAYERS),
+                    arc_spacing / (_INFLATION_LAYERS),
+                    _INFLATION_LAYERS,
+                    angular_spacing,
+                    part_num,
+                )
+            else:
+                # Outer part, inflate inside
+                ConcentricMesh._add_arcs_for_part(
+                    arcs,
+                    inner_radius,
+                    arc_spacing / (_INFLATION_LAYERS),
+                    _INFLATION_LAYERS,
+                    angular_spacing,
+                    part_num,
+                )
+                ConcentricMesh._add_arcs_for_part(
+                    arcs,
+                    inner_radius + arc_spacing + (arc_spacing / _INFLATION_LAYERS),
+                    arc_spacing,
+                    _ARCS_PER_PART - 1,
+                    angular_spacing,
+                    part_num,
+                    edge_nodes=False,
+                )
+        else:
+
+            # Inner part, inflate outside
+            ConcentricMesh._add_arcs_for_part(
+                arcs,
+                inner_radius,
+                arc_spacing,
+                _ARCS_PER_PART,
+                angular_spacing,
+                part_num,
+            )
+
+        print(len(arcs))
+
+        return arcs
+
+    @staticmethod
+    def _add_arcs_for_part(
+        arcs,
+        inner_radius,
+        arc_spacing,
+        arc_count,
+        angular_spacing,
+        part_num,
+        edge_nodes=True,
+    ):
+        mod = 0 if edge_nodes else 1
+
+        for i in range(arc_count):
             # Skip nodes that will not make part of an element
-            if i % 2 == 0:
+            if i % 2 == mod:
                 arcs.append(
                     Arc(angular_spacing, inner_radius + i * arc_spacing, part=part_num)
                 )
@@ -83,7 +151,6 @@ class ConcentricMesh:
                         part=part_num,
                     )
                 )
-        return arcs
 
     @staticmethod
     def _gen_elements(arcs, angular_spacing=_ANGULAR_SPACING):
@@ -127,6 +194,7 @@ class ConcentricMesh:
                 )
                 elements[-1].add_node(arcs[row].node_by_angle(angle + angular_spacing))
 
+        print(f"ELEMENT COUNT: {len(elements)}")
         return elements
 
     def get_nodes(self):
@@ -282,11 +350,15 @@ class ConcentricMesh:
         """
         name = "L2_faces" if is_inner else "L4_faces"
         elements = self.p_0_elements if is_inner else self.p_1_elements
-        diameter = (
-            self.od_0 - 2 * (self.od_0 - self.id_0) / (_ARCS_PER_PART - 1)
-            if is_inner
-            else self.id_1
-        )
+        if is_inner:
+            diameter = self.od_0
+            arc_spacing = (self.od_0 - self.id_0) / (_ARCS_PER_PART)
+            diameter -= arc_spacing
+            diameter += arc_spacing / _INFLATION_LAYERS * (_INFLATION_LAYERS - 2)
+
+        else:
+            diameter = self.id_1
+
         # See definitions of faces: https://web.mit.edu/calculix_v2.7/CalculiX/ccx_2.7/doc/ccx/node43.html#planestresssection
         face = 2 if is_inner else 4
 

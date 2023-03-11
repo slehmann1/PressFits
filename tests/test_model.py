@@ -120,7 +120,7 @@ class TestModel(unittest.TestCase):
         """Functional test of how press fit model radial displacements over several cases
         compares to stress and deflection results from Ansys mechanical model."""
         permissible_discrepancy = (
-            0.2  # Percent allowable difference allowed from theoretical model
+            0.1  # Percent allowable difference allowed from theoretical model
         )
 
         steel = Material(
