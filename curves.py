@@ -4,7 +4,7 @@ import numpy as np
 
 from node import Node
 
-FP_ALLOWANCE = 0.01
+FP_ALLOWANCE = 0.0001
 
 
 class Curve:
@@ -31,16 +31,34 @@ class Curve:
         """
         return self.nodes[id - self.nodes[0].id]
 
+    def get_negative_id(self):
+        """Gets the id of the most negative or anticlockwise node
 
-class HorizontalLine(Curve):
-    def __init__(self, node_spacing, start_x, end_x, y, part=0):
+        Returns:
+            int: Id of the node
+        """
+        return self.nodes[-1].id
+
+    def get_positive_id(self):
+        """Gets the id of the most positive or clockwise node
+
+        Returns:
+            int: Id of the node
+        """
+        return self.nodes[0].id
+
+
+class VerticalLine(Curve):
+    def __init__(
+        self, node_spacing: float, start_y: float, end_y: float, x: float, part=0
+    ):
         """Creates a series of nodes in a horizontal line at the given radius
 
         Args:
             node_spacing (float): Spacing between each node
-            start_x (float): X value to start the line at
-            end_x (float): X value to end the line at
-            y (float): Line y-value
+            start_y (float): Y value to start the line at
+            end_y (float): Y value to end the line at
+            x (float): Line x-value
             part (int): The number of the part. Defaults to 0.
 
         Returns:
@@ -48,10 +66,33 @@ class HorizontalLine(Curve):
         """
         super().__init__()
 
-        num_vals = int(round((end_x - start_x) / node_spacing, 0)) + 1
+        nodes = [
+            Node(x, y, part=part)
+            for y in np.arange(start_y, end_y + FP_ALLOWANCE, node_spacing)
+        ]
 
-        nodes = [Node(x, y, part=part) for x in np.linspace(start_x, end_x, num_vals)]
         self.nodes = nodes
+        self.start_y = start_y
+        self.end_y = end_y
+        self.node_spacing = node_spacing
+
+    def node_by_y_val(self, y):
+        """Gets the node with the given y Value
+
+        Args:
+            y (float): Y value
+
+        Raises:
+            ValueError: If node is not found
+
+        Returns:
+            Node: Node at the given y value
+        """
+        for node in self.nodes:
+            if abs(node.y - y) < FP_ALLOWANCE:
+                return node
+
+        raise ValueError(f"Node not found with y value: {y}")
 
 
 class Arc(Curve):
@@ -85,22 +126,6 @@ class Arc(Curve):
         self.angular_spacing = angular_spacing
         self.start_angle = start_angle
 
-    def get_anticlockwise_id(self):
-        """Gets the id of the most anticlockwise node
-
-        Returns:
-            int: Id of the node
-        """
-        return self.nodes[-1].id
-
-    def get_clockwise_id(self):
-        """Gets the id of the most clockwise node
-
-        Returns:
-            int: Id of the node
-        """
-        return self.nodes[0].id
-
     @staticmethod
     def _polar_to_cartesian(angle, radius):
         """Converts a 2D polar coordinate to a cartesian coordinate
@@ -115,7 +140,7 @@ class Arc(Curve):
         return math.cos(angle) * radius, math.sin(angle) * radius
 
     def node_by_angle(self, angle):
-        """Gets the node with the given ID
+        """Gets the node with the given angle
 
         Args:
             angle (float): Angle from the +X axis in radians

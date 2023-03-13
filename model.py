@@ -5,7 +5,10 @@ from collections import namedtuple
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
 
+from concentric_axisymmetric_mesh import ConcentricAxisymmetricMesh
 from concentric_plane_stress_mesh import ConcentricPlaneStressMesh
+from element import Element
+from node import Node
 from results import Displacement, Force, Result, Strain, Stress
 
 _ENTRY_LENGTH = 12
@@ -15,11 +18,13 @@ Material = namedtuple("Material", "name youngs_modulus poissons_ratio density")
 
 
 class PressFitModel:
-    def __init__(self, id_0, id_1, od_0, od_1, name):
-        self.mesh = ConcentricPlaneStressMesh(id_0, id_1, od_0, od_1)
+    def __init__(self, mesh, name):
+        Node.reset_node_count()
+        Element.reset_element_count()
+        self.mesh = mesh
+        self.elements = mesh.get_elements()
+        self.nodes = mesh.get_nodes()
         self.name = name
-        self.elements = self.mesh.get_elements()
-        self.nodes = self.mesh.get_nodes()
 
     def run_model(self, inner_material, outer_material):
         """Creates an input file and solves the model"""
@@ -156,9 +161,7 @@ class PressFitModel:
         for node in self.nodes:
             try:
                 values.append(
-                    node.results[key].displacement.get_radial_displacement(
-                        node.get_angle()
-                    )
+                    node.results[key].displacement.get_total_displacement()
                     * 1000
                     * 1000
                 )
@@ -327,3 +330,20 @@ def get_nodal_values(text):
         for i in range(_ENTRY_LENGTH + 1, len(text) - 1, _ENTRY_LENGTH)
     ]
     return node_id, return_vals
+
+
+class PlaneStressPressFitModel(PressFitModel):
+    def __init__(self, id_0, id_1, od_0, od_1, name):
+        mesh = ConcentricPlaneStressMesh(id_0, id_1, od_0, od_1)
+        super().__init__(mesh, name)
+
+
+class AxisymmetricPressFitModel(PressFitModel):
+    def __init__(self, id_0, id_1, od_0, od_1, len_0, len_1, offset, name, **kwargs):
+
+        lines_per_part = kwargs.get("lines_per_part")
+
+        mesh = ConcentricAxisymmetricMesh(
+            id_0, id_1, od_0, od_1, len_0, len_1, offset, lines_per_part
+        )
+        super().__init__(mesh, name)

@@ -66,6 +66,14 @@ class Element:
         elif face_number == 4:
             return [self.nodes[3], self.nodes[0]]
 
+    def get_radius(self):
+        """Returns x value of the bottom left node
+
+        Returns:
+            float: radius
+        """
+        return self.nodes[0].x
+
 
 class PSElement(Element):
     """An eight node plane stress element"""

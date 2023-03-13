@@ -13,11 +13,11 @@ class TestMesh(unittest.TestCase):
 
     def test_get_arc_edge_ids(self):
         arcs = [Arc(math.pi / 8, radius, 0) for radius in range(1, 5)]
-        vertical_ids = ConcentricPlaneStressMesh._get_arc_edge_ids(
-            arcs, is_acw_edge=True
+        vertical_ids = ConcentricPlaneStressMesh._get_curve_edge_ids(
+            arcs, is_neg_edge=True
         )
-        horizontal_ids = ConcentricPlaneStressMesh._get_arc_edge_ids(
-            arcs, is_acw_edge=False
+        horizontal_ids = ConcentricPlaneStressMesh._get_curve_edge_ids(
+            arcs, is_neg_edge=False
         )
 
         self.assertEqual(len(vertical_ids), len(arcs))
@@ -92,7 +92,7 @@ class TestMesh(unittest.TestCase):
         """
         arcs = [Arc(angular_spacing, radius, 0) for radius in range(id, od + 1)]
         test_elements = ConcentricPlaneStressMesh._gen_elements(
-            arcs, angular_spacing=angular_spacing
+            arcs, node_spacing=angular_spacing
         )
         self.assertEqual(len(test_elements[0].nodes), len(elements[0].nodes))
 
