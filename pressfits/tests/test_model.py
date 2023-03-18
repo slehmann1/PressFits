@@ -1,9 +1,9 @@
 import unittest
 
-import model
-from element import PSElement
-from model import Material, PlaneStressPressFitModel
-from node import Node
+import pressfits.model as model
+from pressfits.element import PSElement
+from pressfits.model import Material, PlaneStressPressFitModel
+from pressfits.node import Node
 
 
 class TestModel(unittest.TestCase):

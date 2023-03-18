@@ -4,12 +4,11 @@ from collections import namedtuple
 
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
-
-from concentric_axisymmetric_mesh import ConcentricAxisymmetricMesh
-from concentric_plane_stress_mesh import ConcentricPlaneStressMesh
-from element import Element
-from node import Node
-from results import Displacement, Force, Result, Strain, Stress
+from pressfits.concentric_axisymmetric_mesh import ConcentricAxisymmetricMesh
+from pressfits.concentric_plane_stress_mesh import ConcentricPlaneStressMesh
+from pressfits.element import Element
+from pressfits.node import Node
+from pressfits.results import Displacement, Force, Result, Strain, Stress
 
 _ENTRY_LENGTH = 12
 _CMAP = "jet"

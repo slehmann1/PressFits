@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 
-from node import Node
+from pressfits.node import Node
 
 FP_ALLOWANCE = 0.0001
 

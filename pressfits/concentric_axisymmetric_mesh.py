@@ -1,10 +1,9 @@
 import math
 
 import numpy as np
-
-from concentric_mesh import ConcentricMesh
-from curves import VerticalLine
-from element import Element
+from pressfits.concentric_mesh import ConcentricMesh
+from pressfits.curves import VerticalLine
+from pressfits.element import Element
 
 _INFLATION_LAYERS = 5
 _LINES_PER_PART = 13

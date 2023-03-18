@@ -2,10 +2,9 @@ import unittest
 from time import time
 
 import matplotlib.pyplot as plt
-
-from element import Element
-from model import AxisymmetricPressFitModel, Material
-from node import Node
+from pressfits.element import Element
+from pressfits.model import AxisymmetricPressFitModel, Material
+from pressfits.node import Node
 
 
 class TestAxisymmetricPressFitModel(unittest.TestCase):

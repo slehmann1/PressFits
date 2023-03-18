@@ -3,10 +3,10 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 
-import curves as curves
-from concentric_mesh import ConcentricMesh
-from curves import Arc
-from element import PSElement
+import pressfits.curves as curves
+from pressfits.concentric_mesh import ConcentricMesh
+from pressfits.curves import Arc
+from pressfits.element import PSElement
 
 _ARCS_PER_PART = 47
 _ANGULAR_SPACING = math.pi / 16

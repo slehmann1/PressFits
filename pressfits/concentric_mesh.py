@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 
 import matplotlib.pyplot as plt
-
-import curves as curves
-from curves import VerticalLine
+import pressfits.curves as curves
+from pressfits.curves import VerticalLine
 
 YOUNGS_MODULUS = 210000000000
 POISSONS_RATIO = 0.3

@@ -1,7 +1,7 @@
 import math
 import unittest
 
-from curves import Arc
+from pressfits.curves import Arc
 
 
 class TestMesh(unittest.TestCase):

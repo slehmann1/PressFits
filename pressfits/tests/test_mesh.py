@@ -1,9 +1,9 @@
 import math
 import unittest
 
-from concentric_plane_stress_mesh import ConcentricPlaneStressMesh, PSElement
-from curves import Arc
-from node import Node
+from pressfits.concentric_plane_stress_mesh import ConcentricPlaneStressMesh, PSElement
+from pressfits.curves import Arc
+from pressfits.node import Node
 
 
 class TestMesh(unittest.TestCase):
