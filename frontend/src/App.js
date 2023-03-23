@@ -1,10 +1,11 @@
-import logo from "./logo.svg";
-import {
-  AnalyticalSolution,
-  FiniteElementSolution,
-} from "./AnalyticalSolution.js";
 import "./App.css";
+import { Results } from "./ResultsPane.js";
+import Explanation from "./Explanation.js";
+import ModelVisual from "./ModelVisual.js";
+import InputBar from "./InputBar.js";
+
 import React, { Component } from "react";
+
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -16,12 +17,18 @@ function App() {
     <div className="App">
       <Container>
         <Row>
+          <InputBar />
+        </Row>
+        <Row>
           <Col>
-            <AnalyticalSolution tempDifferential="50" assemblyForce="100" />
+            <ModelVisual />
           </Col>
           <Col>
-            <FiniteElementSolution tempDifferential="50" assemblyForce="100" />
+            <Results />
           </Col>
+        </Row>
+        <Row>
+          <Explanation />
         </Row>
       </Container>
     </div>

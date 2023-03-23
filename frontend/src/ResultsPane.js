@@ -1,4 +1,29 @@
 import React, { Component } from "react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+
+class Results extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <Container>
+        <Row>
+          <Col>
+            <FiniteElementSolution />
+          </Col>
+          <Col>
+            <AnalyticalSolution />
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
+}
 
 class Solution extends React.Component {
   constructor(props) {
@@ -94,4 +119,4 @@ FiniteElementSolution.defaultProps = {
   title: "Finite Element Solution",
 };
 
-export { AnalyticalSolution, FiniteElementSolution };
+export { AnalyticalSolution, FiniteElementSolution, Results };
