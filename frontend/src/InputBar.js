@@ -15,7 +15,16 @@ class InputBar extends React.Component {
             <PartInputs name="Inner Part" />
           </Row>
           <Row>
+            <hr style={{ margin: "0px" }}></hr>
+          </Row>
+          <Row>
             <PartInputs name="Outer Part" />
+          </Row>
+          <Row>
+            <hr style={{ margin: "0px" }}></hr>
+          </Row>
+          <Row>
+            <FurtherInputs />
           </Row>
         </Container>
       </div>
@@ -29,47 +38,92 @@ class PartInputs extends React.Component {
   }
   render() {
     return (
-      <div>
-        <Container style={{ marginTop: "10px" }}>
+      <div className="input-block">
+        <Container>
           <Row>
             <Col xs={2} sm={2} md={2} lg={2}>
-              <h3>{this.props.name}</h3>
+              <h4
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "right",
+                  alignItems: "center",
+                }}
+              >
+                {this.props.name}
+              </h4>
             </Col>
             <Col>
               <Row>
                 <Col>
-                  <input type="text" placeholder="Internal Diameter" />
+                  <InputGroup text={"Inner Diameter\n(mm)"} />
                 </Col>
                 <Col>
-                  <input type="text" placeholder="Outer Diameter" />
+                  <InputGroup text={"Outer Diameter\n(mm)"} />
                 </Col>
                 <Col>
-                  <input type="text" placeholder="Length" />
+                  <InputGroup text={"Length\n(mm)"} />
                 </Col>
                 <Col>
-                  <input type="text" placeholder="X Offset" />
+                  <InputGroup text={"X-Offset\n(mm)"} />
                 </Col>
               </Row>
               <Row style={{ marginTop: "5px" }}>
                 <Col>
-                  <input type="text" placeholder="Young's Modulus" />
+                  <InputGroup text={"Young's Modulus\n(MPa)"} />
                 </Col>
                 <Col>
-                  <input type="text" placeholder="Poisson's Ratio" />
+                  <InputGroup text="Poisson's Ratio" />
                 </Col>
                 <Col>
-                  <input
-                    type="text"
-                    placeholder="Coefficient Of Thermal Expansion"
-                  />
+                  <InputGroup text={"Coefficient Of\nThermal Expansion"} />
                 </Col>
                 <Col>
-                  <input type="text" placeholder="Operating Temperature" />
+                  <InputGroup text={"Temperature\n(°C)"} />
                 </Col>
               </Row>
             </Col>
           </Row>
         </Container>
+      </div>
+    );
+  }
+}
+
+class FurtherInputs extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div className="input-block">
+        <Container>
+          <Row>
+            <Col xs={2} sm={2} md={2} lg={2}></Col>
+            <Col>
+              <InputGroup text="Coefficient Of Friction" />
+            </Col>
+            <Col></Col>
+            <Col></Col>
+            <Col>
+              <button className="btn"> Calculate </button>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    );
+  }
+}
+
+class InputGroup extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div className="input-group">
+        <div className="input-group-text">{this.props.text}</div>
+        <input className="form-control" type="number" />
       </div>
     );
   }
