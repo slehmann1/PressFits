@@ -3,6 +3,7 @@ import { Results } from "./ResultsPane.js";
 import Explanation from "./Explanation.js";
 import ModelVisual from "./ModelVisual.js";
 import InputBar from "./InputBar.js";
+import Mesh from "./mesh";
 
 import React, { Component } from "react";
 
@@ -13,6 +14,7 @@ import Col from "react-bootstrap/Col";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
+  new Mesh();
   return (
     <div className="App">
       <Container>
