@@ -32,8 +32,7 @@ class Solution extends React.Component {
   render() {
     return (
       <div className="Solution">
-        <h1> {this.props.title}</h1>
-        <h2> Interface Details </h2>
+        <h3> {this.props.title}</h3>
         <p>
           Interface pressure:&nbsp;
           {this.props.intPressure} MPa
@@ -47,8 +46,8 @@ class Solution extends React.Component {
           {this.props.torqueCapacity} Nm
         </p>
 
-        <h2> Von Mises Stresses </h2>
-        <h3> Inner Part </h3>
+        <h4> Von Mises Stresses </h4>
+        <h5> Inner Part: </h5>
         <p>
           Stress at inner wall:&nbsp;
           {this.props.p0InnerStress} MPa
@@ -58,7 +57,7 @@ class Solution extends React.Component {
           {this.props.p0OuterStress} MPa
         </p>
 
-        <h3> Outer Part </h3>
+        <h5> Outer Part: </h5>
         <p>
           Stress at inner wall:&nbsp;
           {this.props.p1InnerStress} MPa
@@ -68,8 +67,8 @@ class Solution extends React.Component {
           {this.props.p1OuterStress} MPa
         </p>
 
-        <h2> Deflections </h2>
-        <h3> Inner Part </h3>
+        <h4> Deflections </h4>
+        <h5> Inner Part </h5>
         <p>
           Deflection of inner wall:&nbsp;
           {this.props.p0InnerDeflection} mm
@@ -79,7 +78,7 @@ class Solution extends React.Component {
           {this.props.p0OuterDeflection} mm
         </p>
 
-        <h3> Outer Part </h3>
+        <h5> Outer Part </h5>
         <p>
           Deflection of inner wall:&nbsp;
           {this.props.p1InnerDeflection} mm
@@ -89,7 +88,7 @@ class Solution extends React.Component {
           {this.props.p1OuterDeflection} mm
         </p>
 
-        <h2> Assembly Information</h2>
+        <h4> Assembly Information</h4>
         <p>
           Required temperature differential if heating outer part:&nbsp;
           {this.props.tempDifferential} °C

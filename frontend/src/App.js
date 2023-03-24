@@ -16,10 +16,10 @@ function App() {
   return (
     <div className="App">
       <Container>
-        <Row>
+        <Row style={{ marginTop: "10px" }}>
           <InputBar />
         </Row>
-        <Row>
+        <Row style={{ marginTop: "10px" }}>
           <Col>
             <ModelVisual />
           </Col>
@@ -27,7 +27,7 @@ function App() {
             <Results />
           </Col>
         </Row>
-        <Row>
+        <Row style={{ marginTop: "10px" }}>
           <Explanation />
         </Row>
       </Container>
