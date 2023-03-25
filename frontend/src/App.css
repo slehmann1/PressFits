@@ -91,3 +91,22 @@ h5 {
   margin-top: 5px !important;
   margin-bottom: 5px !important;
 }
+.element-line {
+  stroke-width: 1;
+  stroke: black;
+}
+.p_0-element-line {
+  stroke: red;
+}
+.p_1-element-line {
+  stroke: blue;
+}
+.node {
+  fill: black;
+}
+.p_0-node {
+  fill: red;
+}
+.p_1-node {
+  fill: blue;
+}

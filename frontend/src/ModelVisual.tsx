@@ -40,6 +40,9 @@ class ModelVisual extends React.Component<
             cx={node.x * this.state.xScale + this.MARGIN}
             cy={node.y * this.state.yScale + this.MARGIN}
             r="1.5"
+            className={
+              "node " + (node.partNumber == 0 ? "p_0-node" : "p_1-node")
+            }
           />
         ))}
 
@@ -49,7 +52,7 @@ class ModelVisual extends React.Component<
             x2={line.x2 * this.state.xScale + this.MARGIN}
             y1={line.y1 * this.state.yScale + this.MARGIN}
             y2={line.y2 * this.state.yScale + this.MARGIN}
-            stroke="black"
+            className={"element-line " + line.class_name}
           />
         ))}
       </svg>
@@ -82,6 +85,10 @@ class ModelVisual extends React.Component<
           y2: this.state.mesh.nodes[
             this.state.mesh.elements[i].nodeIDs[node_index + 1] - 1
           ].y,
+          class_name:
+            this.state.mesh.elements[i].partNumber == 0
+              ? "p_0-element-line"
+              : "p_1-element-line",
         });
       }
     }

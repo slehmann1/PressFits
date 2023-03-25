@@ -3,6 +3,7 @@ class Node {
   x: number;
   y: number;
   z: number;
+  partNumber?: number;
   /**
    *
    * @param id Node ID
@@ -30,6 +31,7 @@ class Element {
     this.id = id;
     this.nodeIDs = nodeIDs;
   }
+  partNumber?: number;
 }
 
 class Part {
@@ -56,6 +58,19 @@ class Mesh {
     splitString = splitString[1].split("*NSET,NSET=L1_nodes");
     this.elements = this.buildElements(splitString[0]);
 
+    // Assign Element Part Numbers
+    splitString = splitString[1].split("*ELSET,ELSET=PART0_elements");
+    splitString = splitString[1].split("*ELSET,ELSET=PART1_elements");
+    this.assignPartToElements(splitString[0], 0);
+    splitString = splitString[1].split("*SURFACE,NAME=L2_faces,TYPE=ELEMENT");
+    this.assignPartToElements(splitString[0], 1);
+
+    // Assign Node Part Numbers
+    splitString = splitString[1].split("*NSET,NSET=PART0_nodes");
+    splitString = splitString[1].split("*NSET,NSET=PART1_nodes");
+    this.assignPartToNodes(splitString[0], 0);
+    splitString = splitString[1].split("*MATERIAL,NAME=Steel");
+    this.assignPartToNodes(splitString[0], 1);
     // TODO: Add part elements and nodes to the part - > Think about if this is needed to display the results
   }
 
@@ -82,6 +97,20 @@ class Mesh {
       );
     }
     return nodes;
+  }
+
+  assignPartToNodes(nodeString: string, partNumber: number) {
+    const nodeIDs = nodeString.split(", ");
+    for (let nodeID of nodeIDs) {
+      this.nodes[Number(nodeID) - 1].partNumber = partNumber;
+    }
+  }
+
+  assignPartToElements(elementString: string, partNumber: number) {
+    const elementIDs = elementString.split(", ");
+    for (let elementID of elementIDs) {
+      this.elements[Number(elementID) - 1].partNumber = partNumber;
+    }
   }
 
   /**
