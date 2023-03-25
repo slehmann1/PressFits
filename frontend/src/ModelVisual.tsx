@@ -15,6 +15,7 @@ class ModelVisual extends React.Component<
   ref?: any;
   xRange?: number[];
   yRange?: number[];
+  MARGIN = 50;
 
   constructor(props: any) {
     super(props);
@@ -27,8 +28,8 @@ class ModelVisual extends React.Component<
   }
 
   render() {
-    const scale = this.getRange();
-    window.addEventListener("resize", this.updateScale);
+    const scale = this.calcMeshRange();
+    window.addEventListener("resize", this.rescale);
     return (
       <svg
         style={{ height: "100%", width: "100%", border: "1px solid red" }}
@@ -36,9 +37,19 @@ class ModelVisual extends React.Component<
       >
         {this.state.mesh.nodes.map((node, i) => (
           <circle
-            cx={node.x * this.state.xScale}
-            cy={node.y * this.state.yScale}
+            cx={node.x * this.state.xScale + this.MARGIN}
+            cy={node.y * this.state.yScale + this.MARGIN}
             r="1.5"
+          />
+        ))}
+
+        {this.getElementLines().map((line, i) => (
+          <line
+            x1={line.x1 * this.state.xScale + this.MARGIN}
+            x2={line.x2 * this.state.xScale + this.MARGIN}
+            y1={line.y1 * this.state.yScale + this.MARGIN}
+            y2={line.y2 * this.state.yScale + this.MARGIN}
+            stroke="black"
           />
         ))}
       </svg>
@@ -46,25 +57,59 @@ class ModelVisual extends React.Component<
   }
 
   componentDidMount(): void {
-    this.updateScale();
+    this.rescale();
   }
 
-  updateScale() {
-    const width = this.ref.current.clientWidth;
-    const height = this.ref.current.clientWidth;
+  /**
+   * Gets line corner points for every element within the mesh
+   * @returns Object[] where the object contains coordinates of the element corner nodes
+   */
+  getElementLines() {
+    let lines = [];
+    for (let i = 0; i < this.state.mesh.elements.length; i++) {
+      // Corner nodes are the first 4 nodes
+      for (let node_index = 0; node_index < 3; node_index++) {
+        lines.push({
+          x1: this.state.mesh.nodes[
+            this.state.mesh.elements[i].nodeIDs[node_index] - 1
+          ].x,
+          x2: this.state.mesh.nodes[
+            this.state.mesh.elements[i].nodeIDs[node_index + 1] - 1
+          ].x,
+          y1: this.state.mesh.nodes[
+            this.state.mesh.elements[i].nodeIDs[node_index] - 1
+          ].y,
+          y2: this.state.mesh.nodes[
+            this.state.mesh.elements[i].nodeIDs[node_index + 1] - 1
+          ].y,
+        });
+      }
+    }
+    return lines;
+  }
+
+  /**
+   * Scales the SVG based on the data within it
+   */
+  rescale() {
+    const width = this.ref.current.clientWidth - this.MARGIN * 2;
+    const height = this.ref.current.clientWidth - this.MARGIN * 2;
     this.setState({
-      xScale: width / (this.xRange[1] - this.xRange[0]),
+      xScale: width / (this.xRange![1] - this.xRange![0]),
     });
     this.setState({
-      yScale: height / (this.yRange[1] - this.yRange[0]),
+      yScale: height / (this.yRange![1] - this.yRange![0]),
     });
   }
 
-  getRange() {
-    let minX = this.state.mesh.nodes[0].x;
-    let minY = this.state.mesh.nodes[0].y;
-    let maxX = minX;
-    let maxY = minY;
+  /**
+   * Computes range of nodes within the mesh and updates this.xRange and this.yRange appropriately
+   */
+  calcMeshRange() {
+    let minX = 0;
+    let minY = 0;
+    let maxX = this.state.mesh.nodes[0].x;
+    let maxY = this.state.mesh.nodes[0].y;
 
     for (let i = 0; i < this.state.mesh.nodes.length; i++) {
       const x = this.state.mesh.nodes[i].x;
@@ -84,12 +129,6 @@ class ModelVisual extends React.Component<
     }
     this.xRange = [minX, maxX];
     this.yRange = [minY, maxY];
-  }
-
-  plotMesh(svg: JsxElement) {
-    for (let i = 0; i < this.state.mesh.nodes.length; i++) {
-      //svg.append
-    }
   }
 }
 
