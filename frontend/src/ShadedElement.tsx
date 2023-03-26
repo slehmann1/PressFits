@@ -1,7 +1,15 @@
 import React from "react";
+import { Element } from "./mesh";
 
 class ShadedElement extends React.Component<
-  {},
+  {
+    value: number;
+    maxValue: number;
+    minColour: Colour;
+    maxColour: Colour;
+    element: Element;
+    partNumber: number;
+  },
   {
     x: number;
     y: number;
@@ -11,35 +19,49 @@ class ShadedElement extends React.Component<
     maxValue: number;
     minColour: Colour;
     maxColour: Colour;
+    element: Element;
+    partNumber: number;
   }
 > {
   constructor(props: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
     value: number;
     maxValue: number;
     minColour: Colour;
     maxColour: Colour;
+    element: Element;
+    partNumber: number;
   }) {
     super(props);
+    const nodes = props.element.getNodes();
+    console.log(props.element.getNodes());
     this.state = {
       value: props.value,
-      x: props.x,
-      y: props.y,
-      width: props.width,
-      height: props.height,
+      x: nodes[0].visX,
+      y: nodes[0].visY,
+      width: nodes[1].visX - nodes[0].visX,
+      height: nodes[2].visY - nodes[0].visY,
       maxValue: props.maxValue,
       minColour: props.minColour,
       maxColour: props.maxColour,
+      partNumber: props.partNumber,
+      element: props.element,
     };
   }
 
   componentWillReceiveProps(props: any) {
-    this.setState({
+    const nodes = props.element.getNodes();
+    this.state = {
       value: props.value,
-    });
+      x: nodes[0].visX,
+      y: nodes[0].visY,
+      width: nodes[1].visX - nodes[0].visX,
+      height: nodes[2].visY - nodes[0].visY,
+      maxValue: props.maxValue,
+      minColour: props.minColour,
+      maxColour: props.maxColour,
+      partNumber: props.partNumber,
+      element: props.element,
+    };
   }
 
   getColour() {
@@ -62,18 +84,20 @@ class ShadedElement extends React.Component<
   }
 
   render() {
-    console.log("Colour: " + this.getColour().toString());
     return (
-      <rect
-        x={this.state.x}
-        y={this.state.y}
-        width={this.state.width}
-        height={this.state.height}
-        fill={this.getColour().toString()}
-      ></rect>
+      <g>
+        <rect
+          x={this.state.x}
+          y={this.state.y}
+          width={this.state.width}
+          height={this.state.height}
+          fill={this.getColour().toString()}
+        ></rect>
+      </g>
     );
   }
 }
+
 class Colour {
   r: number;
   g: number;
@@ -88,4 +112,13 @@ class Colour {
   }
 }
 
-export { Colour, ShadedElement };
+class Node {
+  x: number;
+  y: number;
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+export { Node, Colour, ShadedElement };

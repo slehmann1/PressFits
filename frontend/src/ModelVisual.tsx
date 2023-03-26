@@ -1,13 +1,20 @@
 import React from "react";
 
-import Mesh from "./mesh";
+import { Mesh, Element } from "./mesh";
 import { PartVisual, PartDimensions } from "./PartVisual";
+import { Colour, ShadedElement, Node } from "./ShadedElement";
 
 class ModelVisual extends React.Component<
   {},
   {
     mesh: Mesh;
-    scalingFactors?: any;
+    scalingFactors: {
+      xScale: number;
+      yScale: number;
+      margin: number;
+      xRange: number[];
+      yRange: number[];
+    };
   }
 > {
   ref?: any;
@@ -21,6 +28,7 @@ class ModelVisual extends React.Component<
         yScale: 1,
         margin: 120,
         xRange: [0, 1],
+        yRange: [0, 1],
       },
     };
     this.ref = React.createRef();
@@ -28,6 +36,7 @@ class ModelVisual extends React.Component<
 
   render() {
     this.calcMeshRange();
+
     return (
       <svg
         style={{ height: "100%", width: "100%", border: "1px solid red" }}
@@ -41,15 +50,8 @@ class ModelVisual extends React.Component<
         {/*Nodes*/}
         {this.state.mesh.nodes.map((node, i) => (
           <circle
-            cx={
-              (node.x + this.state.scalingFactors.xRange[1]) *
-                this.state.scalingFactors.xScale +
-              this.state.scalingFactors.margin
-            }
-            cy={
-              node.y * this.state.scalingFactors.yScale +
-              this.state.scalingFactors.margin
-            }
+            cx={node.visX}
+            cy={node.visY}
             r="1.5"
             className={
               "node " + (node.partNumber == 0 ? "p_0-node" : "p_1-node")
@@ -60,15 +62,8 @@ class ModelVisual extends React.Component<
         {/*Mirrored Nodes*/}
         {this.state.mesh.nodes.map((node, i) => (
           <circle
-            cx={
-              (-node.x + this.state.scalingFactors.xRange[1]) *
-                this.state.scalingFactors.xScale +
-              this.state.scalingFactors.margin
-            }
-            cy={
-              node.y * this.state.scalingFactors.yScale +
-              this.state.scalingFactors.margin
-            }
+            cx={node.visX - node.x * 2 * this.state.scalingFactors.xScale}
+            cy={node.visY}
             r="1.5"
             className={
               "node " + (node.partNumber == 0 ? "p_0-node" : "p_1-node")
@@ -101,6 +96,17 @@ class ModelVisual extends React.Component<
             key={String(line.key)}
           />
         ))}
+        {this.state.mesh.elements.map((element, i) => (
+          <ShadedElement
+            value={100}
+            maxValue={100}
+            minColour={new Colour(255, 0, 0)}
+            maxColour={new Colour(0, 255, 0)}
+            element={element}
+            partNumber={0}
+          />
+        ))}
+
         {/*Mirrored Element Lines*/}
         {this.getElementLines().map((line, i) => (
           <line
@@ -134,6 +140,26 @@ class ModelVisual extends React.Component<
     this.rescale();
   }
 
+  getCornerNodes(element: Element) {
+    let nodes = [];
+
+    // Corner nodes are the first 4 nodes
+    for (let nodeIndex = 0; nodeIndex < 3; nodeIndex++) {
+      nodes.push(
+        new Node(
+          (this.state.mesh.nodes[element.nodeIDs[nodeIndex] - 1].x +
+            this.state.scalingFactors.xRange[1]) *
+            this.state.scalingFactors.xScale +
+            this.state.scalingFactors.margin,
+          this.state.mesh.nodes[element.nodeIDs[nodeIndex] - 1].y *
+            this.state.scalingFactors.yScale +
+            this.state.scalingFactors.margin
+        )
+      );
+    }
+    return nodes;
+  }
+
   /**
    * Gets line corner points for every element within the mesh
    * @returns Object[] where the object contains coordinates of the element corner nodes
@@ -161,6 +187,7 @@ class ModelVisual extends React.Component<
               ? "p_0-element-line"
               : "p_1-element-line",
           key: this.state.mesh.elements[i].id + "-" + nodeIndex,
+          partNumber: this.state.mesh.elements[i].partNumber,
         });
       }
     }
@@ -175,16 +202,23 @@ class ModelVisual extends React.Component<
       this.ref.current.clientWidth - this.state.scalingFactors.margin * 2;
     const height =
       this.ref.current.clientWidth - this.state.scalingFactors.margin * 2;
+    const scalingFactor = {
+      xScale: width / (this.state.scalingFactors.xRange[1] * 2),
+      yScale:
+        height /
+        (this.state.scalingFactors.yRange[1] -
+          this.state.scalingFactors.yRange[0]),
+      margin: this.state.scalingFactors.margin,
+      xRange: this.state.scalingFactors.xRange,
+      yRange: this.state.scalingFactors.yRange,
+    };
     this.setState({
-      scalingFactors: {
-        xScale: width / (this.state.scalingFactors.xRange[1] * 2),
-        yScale:
-          height /
-          (this.state.scalingFactors.yRange[1] -
-            this.state.scalingFactors.yRange[0]),
-        margin: this.state.scalingFactors.margin,
-      },
+      scalingFactors: scalingFactor,
     });
+    console.log(scalingFactor);
+    for (let i = 0; i < this.state.mesh.nodes.length; i++) {
+      this.state.mesh.nodes[i].setScalingFactor(scalingFactor);
+    }
   }
 
   /**

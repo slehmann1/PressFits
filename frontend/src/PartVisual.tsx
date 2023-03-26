@@ -2,9 +2,19 @@ import React from "react";
 import { ShadedElement, Colour } from "./ShadedElement";
 
 class PartVisual extends React.Component<
-  {},
   {
     scalingFactors: any;
+    p0Dims: any;
+    p1Dims: any;
+  },
+  {
+    scalingFactors: {
+      xScale: number;
+      yScale: number;
+      margin: number;
+      xRange: number[];
+      yRange: number[];
+    };
     p0Dims: PartDimensions;
     p1Dims: PartDimensions;
   }
@@ -128,32 +138,22 @@ class PartVisual extends React.Component<
           x2={p1XMirrored}
           dimension={this.state.p1Dims.outerDiameter}
         />
-        <ShadedElement
-          x={1}
-          y={1}
-          width={200}
-          height={200}
-          value={100}
-          maxValue={100}
-          minColour={new Colour(255, 0, 0)}
-          maxColour={new Colour(0, 255, 0)}
-        />
       </g>
     );
   }
 }
 
 class RadialDimension extends React.Component<
-  {},
+  { x1: number; x2: number; y: number; dimension: number },
   {
-    x1: Number;
-    x2: Number;
-    y: Number;
-    dimension: Number;
+    x1: number;
+    x2: number;
+    y: number;
+    dimension: number;
   }
 > {
   TEXT_OFFSET = 6;
-  constructor(props: { x1: Number; x2: Number; y: Number; dimension: Number }) {
+  constructor(props: { x1: number; x2: number; y: number; dimension: number }) {
     super(props);
     this.state = {
       x1: props.x1,
@@ -220,15 +220,15 @@ class RadialDimension extends React.Component<
 }
 
 class PartDimensions {
-  internalDiameter: Number;
-  outerDiameter: Number;
-  length: Number;
-  xOffset: Number;
+  internalDiameter: number;
+  outerDiameter: number;
+  length: number;
+  xOffset: number;
   constructor(
-    internalDiameter: Number,
-    outerDiameter: Number,
-    length: Number,
-    xOffset: Number
+    internalDiameter: number,
+    outerDiameter: number,
+    length: number,
+    xOffset: number
   ) {
     this.internalDiameter = internalDiameter;
     this.outerDiameter = outerDiameter;

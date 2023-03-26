@@ -3,7 +3,7 @@ import { Results } from "./ResultsPane.js";
 import Explanation from "./Explanation.js";
 import ModelVisual from "./ModelVisual.tsx";
 import InputBar from "./InputBar.js";
-import Mesh from "./mesh";
+import { Mesh } from "./mesh";
 
 import React, { Component, ReactDOM } from "react";
 import $ from "jquery";

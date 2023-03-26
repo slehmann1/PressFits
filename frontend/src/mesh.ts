@@ -3,6 +3,8 @@ class Node {
   x: number;
   y: number;
   z: number;
+  visX: number;
+  visY: number;
   partNumber?: number;
   /**
    *
@@ -16,21 +18,47 @@ class Node {
     this.x = x;
     this.y = y;
     this.z = z;
+    this.visX = x;
+    this.visY = y;
+  }
+  setScalingFactor(scalingFactors: {
+    xScale: number;
+    yScale: number;
+    margin: number;
+    xRange: number[];
+  }) {
+    this.visX =
+      (this.x + scalingFactors.xRange[1]) * scalingFactors.xScale +
+      scalingFactors.margin;
+    this.visY = this.y * scalingFactors.yScale + scalingFactors.margin;
+
+    console.log(this.visX);
   }
 }
 
 class Element {
   id: number;
   nodeIDs: number[];
+  mesh: Mesh;
   /**
    * Eight node axisymmetric Element
    * @param id Element ID
    * @param nodeIDs Ids of elements within the Node
    */
-  constructor(id: number, nodeIDs: number[]) {
+  constructor(id: number, nodeIDs: number[], mesh: Mesh) {
     this.id = id;
     this.nodeIDs = nodeIDs;
+    this.mesh = mesh;
   }
+
+  getNodes() {
+    let nodes = [];
+    for (let nodeIndex = 0; nodeIndex < this.nodeIDs.length; nodeIndex++) {
+      nodes.push(this.mesh.nodes[this.nodeIDs[nodeIndex] - 1]);
+    }
+    return nodes;
+  }
+
   partNumber?: number;
 }
 
@@ -131,13 +159,13 @@ class Mesh {
       for (let ii = 1; ii < elementSplit.length; ii++) {
         nodeIDs.push(Number(elementSplit[ii]));
       }
-      elements.push(new Element(elementID, nodeIDs));
+      elements.push(new Element(elementID, nodeIDs, this));
     }
     return elements;
   }
 }
 
-export default Mesh;
+export { Mesh, Element };
 
 const testText =
   "*NODE, NSET=nodes\n\
