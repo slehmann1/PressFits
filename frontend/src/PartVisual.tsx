@@ -1,4 +1,5 @@
 import React from "react";
+import { ShadedElement, Colour } from "./ShadedElement";
 
 class PartVisual extends React.Component<
   {},
@@ -127,6 +128,16 @@ class PartVisual extends React.Component<
           x2={p1XMirrored}
           dimension={this.state.p1Dims.outerDiameter}
         />
+        <ShadedElement
+          x={1}
+          y={1}
+          width={200}
+          height={200}
+          value={100}
+          maxValue={100}
+          minColour={new Colour(255, 0, 0)}
+          maxColour={new Colour(0, 255, 0)}
+        />
       </g>
     );
   }
@@ -192,8 +203,8 @@ class RadialDimension extends React.Component<
           y1={this.state.y}
           x2={this.state.x2}
           y2={this.state.y}
-          marker-end="url(#arrow)"
-          marker-start="url(#arrow)"
+          markerEnd="url(#arrow)"
+          markerStart="url(#arrow)"
           className="arrow"
         />
         <text
