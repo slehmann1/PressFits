@@ -110,3 +110,21 @@ h5 {
 .p_1-node {
   fill: blue;
 }
+.p_0_overlay {
+  fill: rgba(255, 0, 0, 0.3);
+}
+.p_1_overlay {
+  fill: rgba(0, 0, 255, 0.3);
+}
+.arrow {
+  stroke: rgb(50, 50, 50);
+  stroke-width: 2px;
+}
+.arrow-head {
+  fill: rgb(50, 50, 50);
+}
+.arrow-text {
+  text-anchor: middle;
+  font: size 16px;
+  font-family: "Helvetica Neue", Helvetica, Arial sans-serif;
+}

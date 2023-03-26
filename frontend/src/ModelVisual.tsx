@@ -1,58 +1,129 @@
-import React, { Component, useRef, useEffect } from "react";
+import React from "react";
+
 import Mesh from "./mesh";
-import { JsxElement } from "typescript";
+import { PartVisual, PartDimensions } from "./PartVisual";
 
 class ModelVisual extends React.Component<
   {},
   {
     mesh: Mesh;
-    xRange?: number[];
-    yRange?: number[];
-    xScale: number;
-    yScale: number;
+    scalingFactors?: any;
   }
 > {
   ref?: any;
-  xRange?: number[];
-  yRange?: number[];
-  MARGIN = 50;
 
   constructor(props: any) {
     super(props);
     this.state = {
       mesh: props.mesh,
-      xScale: 1,
-      yScale: 1,
+      scalingFactors: {
+        xScale: 1,
+        yScale: 1,
+        margin: 120,
+        xRange: [0, 1],
+      },
     };
     this.ref = React.createRef();
   }
 
   render() {
-    const scale = this.calcMeshRange();
-    window.addEventListener("resize", this.rescale);
+    this.calcMeshRange();
     return (
       <svg
         style={{ height: "100%", width: "100%", border: "1px solid red" }}
         ref={this.ref}
       >
+        <PartVisual
+          scalingFactors={this.state.scalingFactors}
+          p0Dims={new PartDimensions(0.01, 0.01505, 0.015, 0)}
+          p1Dims={new PartDimensions(0.015, 0.025, 0.015, 0)}
+        ></PartVisual>
+        {/*Nodes*/}
         {this.state.mesh.nodes.map((node, i) => (
           <circle
-            cx={node.x * this.state.xScale + this.MARGIN}
-            cy={node.y * this.state.yScale + this.MARGIN}
+            cx={
+              (node.x + this.state.scalingFactors.xRange[1]) *
+                this.state.scalingFactors.xScale +
+              this.state.scalingFactors.margin
+            }
+            cy={
+              node.y * this.state.scalingFactors.yScale +
+              this.state.scalingFactors.margin
+            }
             r="1.5"
             className={
               "node " + (node.partNumber == 0 ? "p_0-node" : "p_1-node")
             }
+            key={node.id}
           />
         ))}
-
+        {/*Mirrored Nodes*/}
+        {this.state.mesh.nodes.map((node, i) => (
+          <circle
+            cx={
+              (-node.x + this.state.scalingFactors.xRange[1]) *
+                this.state.scalingFactors.xScale +
+              this.state.scalingFactors.margin
+            }
+            cy={
+              node.y * this.state.scalingFactors.yScale +
+              this.state.scalingFactors.margin
+            }
+            r="1.5"
+            className={
+              "node " + (node.partNumber == 0 ? "p_0-node" : "p_1-node")
+            }
+            key={String(node.id) + "Mirrored"}
+          />
+        ))}
+        {/*Element Lines*/}
         {this.getElementLines().map((line, i) => (
           <line
-            x1={line.x1 * this.state.xScale + this.MARGIN}
-            x2={line.x2 * this.state.xScale + this.MARGIN}
-            y1={line.y1 * this.state.yScale + this.MARGIN}
-            y2={line.y2 * this.state.yScale + this.MARGIN}
-            className={"element-line " + line.class_name}
+            x1={
+              (line.x1 + this.state.scalingFactors.xRange[1]) *
+                this.state.scalingFactors.xScale +
+              this.state.scalingFactors.margin
+            }
+            x2={
+              (line.x2 + this.state.scalingFactors.xRange[1]) *
+                this.state.scalingFactors.xScale +
+              this.state.scalingFactors.margin
+            }
+            y1={
+              line.y1 * this.state.scalingFactors.yScale +
+              this.state.scalingFactors.margin
+            }
+            y2={
+              line.y2 * this.state.scalingFactors.yScale +
+              this.state.scalingFactors.margin
+            }
+            className={"element-line " + line.className}
+            key={String(line.key)}
+          />
+        ))}
+        {/*Mirrored Element Lines*/}
+        {this.getElementLines().map((line, i) => (
+          <line
+            x1={
+              (-line.x1 + this.state.scalingFactors.xRange[1]) *
+                this.state.scalingFactors.xScale +
+              this.state.scalingFactors.margin
+            }
+            x2={
+              (-line.x2 + this.state.scalingFactors.xRange[1]) *
+                this.state.scalingFactors.xScale +
+              this.state.scalingFactors.margin
+            }
+            y1={
+              line.y1 * this.state.scalingFactors.yScale +
+              this.state.scalingFactors.margin
+            }
+            y2={
+              line.y2 * this.state.scalingFactors.yScale +
+              this.state.scalingFactors.margin
+            }
+            className={"element-line " + line.className}
+            key={String(line.key) + "Mirrored"}
           />
         ))}
       </svg>
@@ -71,24 +142,25 @@ class ModelVisual extends React.Component<
     let lines = [];
     for (let i = 0; i < this.state.mesh.elements.length; i++) {
       // Corner nodes are the first 4 nodes
-      for (let node_index = 0; node_index < 3; node_index++) {
+      for (let nodeIndex = 0; nodeIndex < 3; nodeIndex++) {
         lines.push({
           x1: this.state.mesh.nodes[
-            this.state.mesh.elements[i].nodeIDs[node_index] - 1
+            this.state.mesh.elements[i].nodeIDs[nodeIndex] - 1
           ].x,
           x2: this.state.mesh.nodes[
-            this.state.mesh.elements[i].nodeIDs[node_index + 1] - 1
+            this.state.mesh.elements[i].nodeIDs[nodeIndex + 1] - 1
           ].x,
           y1: this.state.mesh.nodes[
-            this.state.mesh.elements[i].nodeIDs[node_index] - 1
+            this.state.mesh.elements[i].nodeIDs[nodeIndex] - 1
           ].y,
           y2: this.state.mesh.nodes[
-            this.state.mesh.elements[i].nodeIDs[node_index + 1] - 1
+            this.state.mesh.elements[i].nodeIDs[nodeIndex + 1] - 1
           ].y,
-          class_name:
+          className:
             this.state.mesh.elements[i].partNumber == 0
               ? "p_0-element-line"
               : "p_1-element-line",
+          key: this.state.mesh.elements[i].id + "-" + nodeIndex,
         });
       }
     }
@@ -99,13 +171,19 @@ class ModelVisual extends React.Component<
    * Scales the SVG based on the data within it
    */
   rescale() {
-    const width = this.ref.current.clientWidth - this.MARGIN * 2;
-    const height = this.ref.current.clientWidth - this.MARGIN * 2;
+    const width =
+      this.ref.current.clientWidth - this.state.scalingFactors.margin * 2;
+    const height =
+      this.ref.current.clientWidth - this.state.scalingFactors.margin * 2;
     this.setState({
-      xScale: width / (this.xRange![1] - this.xRange![0]),
-    });
-    this.setState({
-      yScale: height / (this.yRange![1] - this.yRange![0]),
+      scalingFactors: {
+        xScale: width / (this.state.scalingFactors.xRange[1] * 2),
+        yScale:
+          height /
+          (this.state.scalingFactors.yRange[1] -
+            this.state.scalingFactors.yRange[0]),
+        margin: this.state.scalingFactors.margin,
+      },
     });
   }
 
@@ -113,9 +191,9 @@ class ModelVisual extends React.Component<
    * Computes range of nodes within the mesh and updates this.xRange and this.yRange appropriately
    */
   calcMeshRange() {
-    let minX = 0;
     let minY = 0;
     let maxX = this.state.mesh.nodes[0].x;
+    let minX = maxX;
     let maxY = this.state.mesh.nodes[0].y;
 
     for (let i = 0; i < this.state.mesh.nodes.length; i++) {
@@ -134,8 +212,8 @@ class ModelVisual extends React.Component<
         maxY = y;
       }
     }
-    this.xRange = [minX, maxX];
-    this.yRange = [minY, maxY];
+    this.state.scalingFactors.xRange = [minX, maxX];
+    this.state.scalingFactors.yRange = [minY, maxY];
   }
 }
 
