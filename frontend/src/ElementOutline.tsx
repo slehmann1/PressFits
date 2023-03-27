@@ -12,6 +12,7 @@ class ElementOutline extends React.Component<
   }
 > {
   CORNER_NODE_COUNT = 4;
+
   constructor(props: { element: Element; xScale: number }) {
     super(props);
     this.state = {
@@ -27,12 +28,17 @@ class ElementOutline extends React.Component<
     };
   }
 
+  /**
+   * Gets line corner points for every element within the mesh
+   * @returns Object[] where the object contains coordinates of the element corner nodes and the class name
+   */
   getLines() {
     let lines = [];
     let visX = [];
     let visY = [];
     let x = [];
     let y = [];
+
     const className =
       this.state.nodes[0].partNumber == 0
         ? "p_0-element-line"
@@ -63,6 +69,7 @@ class ElementOutline extends React.Component<
         className: className,
       });
     }
+
     // Add line back to the beginning
     visX = [
       this.state.nodes[0].visX,
@@ -74,6 +81,7 @@ class ElementOutline extends React.Component<
     ];
     x = [this.state.nodes[0].x, this.state.nodes[this.CORNER_NODE_COUNT - 1].x];
     y = [this.state.nodes[0].y, this.state.nodes[this.CORNER_NODE_COUNT - 1].y];
+
     lines.push({
       visX: visX,
       visY: visY,
@@ -89,6 +97,7 @@ class ElementOutline extends React.Component<
     const lines = this.getLines();
     return (
       <g>
+        {/*Nodes*/}
         {this.state.nodes.map((node, i) => (
           <g>
             <circle
@@ -114,6 +123,7 @@ class ElementOutline extends React.Component<
             key={String(node.id) + "Mirrored"}
           />
         ))}
+        {/*Lines*/}
         {lines.map((line: any, i) => (
           <line
             x1={line.visX[0]}
@@ -124,7 +134,7 @@ class ElementOutline extends React.Component<
           />
         ))}
 
-        {/*Mirrored Element Lines*/}
+        {/*Mirrored Lines*/}
         {lines.map((line: any, i) => (
           <line
             x1={line.visX[0] - line.x[0] * 2 * this.state.xScale}

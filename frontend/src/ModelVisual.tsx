@@ -1,8 +1,8 @@
 import React from "react";
 
-import { Mesh, Element } from "./mesh";
+import { Mesh } from "./mesh";
 import { PartVisual, PartDimensions } from "./PartVisual";
-import { Colour, ShadedElement, Node } from "./ShadedElement";
+import { Colour, ShadedElement } from "./ShadedElement";
 import ElementOutline from "./ElementOutline";
 
 class ModelVisual extends React.Component<
@@ -57,8 +57,10 @@ class ModelVisual extends React.Component<
             maxColour={new Colour(0, 255, 0)}
             element={element}
             partNumber={0}
+            xScale={this.state.scalingFactors.xScale}
           />
         ))}
+
         {this.state.mesh.elements.map((element, i) => (
           <ElementOutline
             element={element}
@@ -71,60 +73,6 @@ class ModelVisual extends React.Component<
 
   componentDidMount(): void {
     this.rescale();
-  }
-
-  getCornerNodes(element: Element) {
-    let nodes = [];
-
-    // Corner nodes are the first 4 nodes
-    for (let nodeIndex = 0; nodeIndex < 3; nodeIndex++) {
-      nodes.push(
-        new Node(
-          (this.state.mesh.nodes[element.nodeIDs[nodeIndex] - 1].x +
-            this.state.scalingFactors.xRange[1]) *
-            this.state.scalingFactors.xScale +
-            this.state.scalingFactors.margin,
-          this.state.mesh.nodes[element.nodeIDs[nodeIndex] - 1].y *
-            this.state.scalingFactors.yScale +
-            this.state.scalingFactors.margin
-        )
-      );
-    }
-    return nodes;
-  }
-
-  /**
-   * Gets line corner points for every element within the mesh
-   * @returns Object[] where the object contains coordinates of the element corner nodes
-   */
-  getElementLines() {
-    let lines = [];
-    for (let i = 0; i < this.state.mesh.elements.length; i++) {
-      // Corner nodes are the first 4 nodes
-      for (let nodeIndex = 0; nodeIndex < 3; nodeIndex++) {
-        lines.push({
-          x1: this.state.mesh.nodes[
-            this.state.mesh.elements[i].nodeIDs[nodeIndex] - 1
-          ].x,
-          x2: this.state.mesh.nodes[
-            this.state.mesh.elements[i].nodeIDs[nodeIndex + 1] - 1
-          ].x,
-          y1: this.state.mesh.nodes[
-            this.state.mesh.elements[i].nodeIDs[nodeIndex] - 1
-          ].y,
-          y2: this.state.mesh.nodes[
-            this.state.mesh.elements[i].nodeIDs[nodeIndex + 1] - 1
-          ].y,
-          className:
-            this.state.mesh.elements[i].partNumber == 0
-              ? "p_0-element-line"
-              : "p_1-element-line",
-          key: this.state.mesh.elements[i].id + "-" + nodeIndex,
-          partNumber: this.state.mesh.elements[i].partNumber,
-        });
-      }
-    }
-    return lines;
   }
 
   /**

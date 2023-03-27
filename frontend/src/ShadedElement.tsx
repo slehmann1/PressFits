@@ -9,10 +9,12 @@ class ShadedElement extends React.Component<
     maxColour: Colour;
     element: Element;
     partNumber: number;
+    xScale: number;
   },
   {
     x: number;
     y: number;
+    xMirrored: number;
     width: number;
     height: number;
     value: number;
@@ -30,6 +32,7 @@ class ShadedElement extends React.Component<
     maxColour: Colour;
     element: Element;
     partNumber: number;
+    xScale: number;
   }) {
     super(props);
     const nodes = props.element.getNodes();
@@ -38,6 +41,7 @@ class ShadedElement extends React.Component<
       x: nodes[0].visX,
       y: nodes[0].visY,
       width: nodes[1].visX - nodes[0].visX,
+      xMirrored: nodes[0].visX - (nodes[0].x + nodes[1].x) * props.xScale,
       height: nodes[2].visY - nodes[0].visY,
       maxValue: props.maxValue,
       minColour: props.minColour,
@@ -53,6 +57,7 @@ class ShadedElement extends React.Component<
       value: props.value,
       x: nodes[0].visX,
       y: nodes[0].visY,
+      xMirrored: nodes[0].visX - (nodes[0].x + nodes[1].x) * props.xScale,
       width: nodes[1].visX - nodes[0].visX,
       height: nodes[2].visY - nodes[0].visY,
       maxValue: props.maxValue,
@@ -63,6 +68,10 @@ class ShadedElement extends React.Component<
     };
   }
 
+  /**
+   * Determines colour of the shaded element based on its value
+   * @returns Colour of the shaded element
+   */
   getColour() {
     const x = this.state.value / this.state.maxValue;
     const r = this.linterp(this.state.minColour.r, this.state.maxColour.r, x);
@@ -85,8 +94,18 @@ class ShadedElement extends React.Component<
   render() {
     return (
       <g>
+        {/*Element*/}
         <rect
           x={this.state.x}
+          y={this.state.y}
+          width={this.state.width}
+          height={this.state.height}
+          fill={this.getColour().toString()}
+        ></rect>
+
+        {/*Mirrored Element*/}
+        <rect
+          x={this.state.xMirrored}
           y={this.state.y}
           width={this.state.width}
           height={this.state.height}
@@ -97,6 +116,9 @@ class ShadedElement extends React.Component<
   }
 }
 
+/**
+ * RGB representation of a colour colde
+ */
 class Colour {
   r: number;
   g: number;
@@ -111,13 +133,4 @@ class Colour {
   }
 }
 
-class Node {
-  x: number;
-  y: number;
-  constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
-  }
-}
-
-export { Node, Colour, ShadedElement };
+export { Colour, ShadedElement };
