@@ -3,6 +3,7 @@ import React from "react";
 import { Mesh, Element } from "./mesh";
 import { PartVisual, PartDimensions } from "./PartVisual";
 import { Colour, ShadedElement, Node } from "./ShadedElement";
+import ElementOutline from "./ElementOutline";
 
 class ModelVisual extends React.Component<
   {},
@@ -47,55 +48,7 @@ class ModelVisual extends React.Component<
           p0Dims={new PartDimensions(0.01, 0.01505, 0.015, 0)}
           p1Dims={new PartDimensions(0.015, 0.025, 0.015, 0)}
         ></PartVisual>
-        {/*Nodes*/}
-        {this.state.mesh.nodes.map((node, i) => (
-          <circle
-            cx={node.visX}
-            cy={node.visY}
-            r="1.5"
-            className={
-              "node " + (node.partNumber == 0 ? "p_0-node" : "p_1-node")
-            }
-            key={node.id}
-          />
-        ))}
-        {/*Mirrored Nodes*/}
-        {this.state.mesh.nodes.map((node, i) => (
-          <circle
-            cx={node.visX - node.x * 2 * this.state.scalingFactors.xScale}
-            cy={node.visY}
-            r="1.5"
-            className={
-              "node " + (node.partNumber == 0 ? "p_0-node" : "p_1-node")
-            }
-            key={String(node.id) + "Mirrored"}
-          />
-        ))}
-        {/*Element Lines*/}
-        {this.getElementLines().map((line, i) => (
-          <line
-            x1={
-              (line.x1 + this.state.scalingFactors.xRange[1]) *
-                this.state.scalingFactors.xScale +
-              this.state.scalingFactors.margin
-            }
-            x2={
-              (line.x2 + this.state.scalingFactors.xRange[1]) *
-                this.state.scalingFactors.xScale +
-              this.state.scalingFactors.margin
-            }
-            y1={
-              line.y1 * this.state.scalingFactors.yScale +
-              this.state.scalingFactors.margin
-            }
-            y2={
-              line.y2 * this.state.scalingFactors.yScale +
-              this.state.scalingFactors.margin
-            }
-            className={"element-line " + line.className}
-            key={String(line.key)}
-          />
-        ))}
+
         {this.state.mesh.elements.map((element, i) => (
           <ShadedElement
             value={100}
@@ -106,30 +59,10 @@ class ModelVisual extends React.Component<
             partNumber={0}
           />
         ))}
-
-        {/*Mirrored Element Lines*/}
-        {this.getElementLines().map((line, i) => (
-          <line
-            x1={
-              (-line.x1 + this.state.scalingFactors.xRange[1]) *
-                this.state.scalingFactors.xScale +
-              this.state.scalingFactors.margin
-            }
-            x2={
-              (-line.x2 + this.state.scalingFactors.xRange[1]) *
-                this.state.scalingFactors.xScale +
-              this.state.scalingFactors.margin
-            }
-            y1={
-              line.y1 * this.state.scalingFactors.yScale +
-              this.state.scalingFactors.margin
-            }
-            y2={
-              line.y2 * this.state.scalingFactors.yScale +
-              this.state.scalingFactors.margin
-            }
-            className={"element-line " + line.className}
-            key={String(line.key) + "Mirrored"}
+        {this.state.mesh.elements.map((element, i) => (
+          <ElementOutline
+            element={element}
+            xScale={this.state.scalingFactors.xScale}
           />
         ))}
       </svg>

@@ -33,7 +33,6 @@ class ShadedElement extends React.Component<
   }) {
     super(props);
     const nodes = props.element.getNodes();
-    console.log(props.element.getNodes());
     this.state = {
       value: props.value,
       x: nodes[0].visX,

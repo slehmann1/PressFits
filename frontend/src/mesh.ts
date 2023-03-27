@@ -165,7 +165,7 @@ class Mesh {
   }
 }
 
-export { Mesh, Element };
+export { Mesh, Node, Element };
 
 const testText =
   "*NODE, NSET=nodes\n\
