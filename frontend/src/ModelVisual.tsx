@@ -51,10 +51,15 @@ class ModelVisual extends React.Component<
 
         {this.state.mesh.elements.map((element, i) => (
           <ShadedElement
-            value={100}
+            value={70}
             maxValue={100}
-            minColour={new Colour(255, 0, 0)}
-            maxColour={new Colour(0, 255, 0)}
+            colours={[
+              new Colour(255, 0, 0),
+              new Colour(255, 255, 0),
+              new Colour(0, 255, 0),
+              new Colour(0, 255, 255),
+              new Colour(0, 0, 255),
+            ]}
             element={element}
             partNumber={0}
             xScale={this.state.scalingFactors.xScale}

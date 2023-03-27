@@ -5,8 +5,7 @@ class ShadedElement extends React.Component<
   {
     value: number;
     maxValue: number;
-    minColour: Colour;
-    maxColour: Colour;
+    colours: Colour[];
     element: Element;
     partNumber: number;
     xScale: number;
@@ -19,8 +18,7 @@ class ShadedElement extends React.Component<
     height: number;
     value: number;
     maxValue: number;
-    minColour: Colour;
-    maxColour: Colour;
+    colours: Colour[];
     element: Element;
     partNumber: number;
   }
@@ -28,8 +26,7 @@ class ShadedElement extends React.Component<
   constructor(props: {
     value: number;
     maxValue: number;
-    minColour: Colour;
-    maxColour: Colour;
+    colours: Colour[];
     element: Element;
     partNumber: number;
     xScale: number;
@@ -44,8 +41,7 @@ class ShadedElement extends React.Component<
       xMirrored: nodes[0].visX - (nodes[0].x + nodes[1].x) * props.xScale,
       height: nodes[2].visY - nodes[0].visY,
       maxValue: props.maxValue,
-      minColour: props.minColour,
-      maxColour: props.maxColour,
+      colours: props.colours,
       partNumber: props.partNumber,
       element: props.element,
     };
@@ -61,8 +57,7 @@ class ShadedElement extends React.Component<
       width: nodes[1].visX - nodes[0].visX,
       height: nodes[2].visY - nodes[0].visY,
       maxValue: props.maxValue,
-      minColour: props.minColour,
-      maxColour: props.maxColour,
+      colours: props.colours,
       partNumber: props.partNumber,
       element: props.element,
     };
@@ -73,10 +68,30 @@ class ShadedElement extends React.Component<
    * @returns Colour of the shaded element
    */
   getColour() {
-    const x = this.state.value / this.state.maxValue;
-    const r = this.linterp(this.state.minColour.r, this.state.maxColour.r, x);
-    const g = this.linterp(this.state.minColour.g, this.state.maxColour.g, x);
-    const b = this.linterp(this.state.minColour.b, this.state.maxColour.b, x);
+    // It is the last colour
+    if (this.state.value === this.state.maxValue) {
+      return this.state.colours[this.state.colours.length - 1];
+    }
+
+    const startColourIndex = Math.floor(
+      this.state.value /
+        this.state.maxValue /
+        (1 / (this.state.colours.length - 1))
+    );
+
+    let startColour = this.state.colours[startColourIndex];
+    let endColour = this.state.colours[startColourIndex + 1];
+
+    let x =
+      ((this.state.value / this.state.maxValue) %
+        (1 / (this.state.colours.length - 1))) *
+      (this.state.colours.length - 1);
+
+    console.log("Start Colour: " + startColourIndex + " x: " + x);
+
+    const r = this.linterp(startColour.r, endColour.r, x);
+    const g = this.linterp(startColour.g, endColour.g, x);
+    const b = this.linterp(startColour.b, endColour.b, x);
     return new Colour(r, g, b);
   }
 
