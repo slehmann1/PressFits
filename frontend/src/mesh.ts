@@ -31,8 +31,6 @@ class Node {
       (this.x + scalingFactors.xRange[1]) * scalingFactors.xScale +
       scalingFactors.margin;
     this.visY = this.y * scalingFactors.yScale + scalingFactors.margin;
-
-    console.log(this.visX);
   }
 }
 

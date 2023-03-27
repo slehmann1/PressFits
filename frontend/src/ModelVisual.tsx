@@ -2,8 +2,10 @@ import React from "react";
 
 import { Mesh } from "./mesh";
 import { PartVisual, PartDimensions } from "./PartVisual";
-import { Colour, ShadedElement } from "./ShadedElement";
+import { ShadedElement } from "./ShadedElement";
+import Colour from "./Colour";
 import ElementOutline from "./ElementOutline";
+import Scale from "./Scale";
 
 class ModelVisual extends React.Component<
   {},
@@ -37,7 +39,13 @@ class ModelVisual extends React.Component<
 
   render() {
     this.calcMeshRange();
-
+    let colours = [
+      new Colour(255, 0, 0),
+      new Colour(255, 255, 0),
+      new Colour(0, 255, 0),
+      new Colour(0, 255, 255),
+      new Colour(0, 0, 255),
+    ];
     return (
       <svg
         style={{ height: "100%", width: "100%", border: "1px solid red" }}
@@ -53,13 +61,7 @@ class ModelVisual extends React.Component<
           <ShadedElement
             value={70}
             maxValue={100}
-            colours={[
-              new Colour(255, 0, 0),
-              new Colour(255, 255, 0),
-              new Colour(0, 255, 0),
-              new Colour(0, 255, 255),
-              new Colour(0, 0, 255),
-            ]}
+            colours={colours}
             element={element}
             partNumber={0}
             xScale={this.state.scalingFactors.xScale}
@@ -72,6 +74,24 @@ class ModelVisual extends React.Component<
             xScale={this.state.scalingFactors.xScale}
           />
         ))}
+
+        <Scale
+          minValue={0}
+          maxValue={100}
+          colours={colours}
+          x={10}
+          y={
+            this.state.scalingFactors.yRange[0] *
+              this.state.scalingFactors.yScale +
+            this.state.scalingFactors.margin
+          }
+          height={
+            this.state.scalingFactors.yRange[1] *
+            this.state.scalingFactors.yScale
+          }
+          width={15}
+          units="MPa"
+        />
       </svg>
     );
   }
@@ -101,7 +121,6 @@ class ModelVisual extends React.Component<
     this.setState({
       scalingFactors: scalingFactor,
     });
-    console.log(scalingFactor);
     for (let i = 0; i < this.state.mesh.nodes.length; i++) {
       this.state.mesh.nodes[i].setScalingFactor(scalingFactor);
     }

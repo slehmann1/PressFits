@@ -1,5 +1,6 @@
 import React from "react";
 import { Element } from "./mesh";
+import Colour from "./Colour";
 
 class ShadedElement extends React.Component<
   {
@@ -87,8 +88,6 @@ class ShadedElement extends React.Component<
         (1 / (this.state.colours.length - 1))) *
       (this.state.colours.length - 1);
 
-    console.log("Start Colour: " + startColourIndex + " x: " + x);
-
     const r = this.linterp(startColour.r, endColour.r, x);
     const g = this.linterp(startColour.g, endColour.g, x);
     const b = this.linterp(startColour.b, endColour.b, x);
@@ -131,21 +130,4 @@ class ShadedElement extends React.Component<
   }
 }
 
-/**
- * RGB representation of a colour colde
- */
-class Colour {
-  r: number;
-  g: number;
-  b: number;
-  constructor(r: number, g: number, b: number) {
-    this.r = r;
-    this.g = g;
-    this.b = b;
-  }
-  toString() {
-    return "rgb(" + this.r + ", " + this.g + ", " + this.b + ")";
-  }
-}
-
-export { Colour, ShadedElement };
+export { ShadedElement };

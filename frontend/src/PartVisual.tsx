@@ -1,5 +1,4 @@
 import React from "react";
-import { ShadedElement, Colour } from "./ShadedElement";
 
 class PartVisual extends React.Component<
   {
