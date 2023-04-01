@@ -6,7 +6,6 @@ import InputBar from "./InputBar.js";
 import { Mesh } from "./mesh";
 
 import React, { Component, ReactDOM } from "react";
-import $ from "jquery";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -23,7 +22,7 @@ class App extends React.Component {
       <div className="App">
         <Container>
           <Row style={{ marginTop: "10px" }}>
-            <InputBar />
+            <InputBar app={this} />
           </Row>
           <Row style={{ marginTop: "10px" }}>
             <Col>
@@ -39,6 +38,10 @@ class App extends React.Component {
         </Container>
       </div>
     );
+  }
+  calculate(inputs) {
+    console.log("Calculate:");
+    console.log(inputs);
   }
 }
 
