@@ -4,6 +4,7 @@ from collections import namedtuple
 
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
+
 from pressfits.concentric_axisymmetric_mesh import ConcentricAxisymmetricMesh
 from pressfits.concentric_plane_stress_mesh import ConcentricPlaneStressMesh
 from pressfits.element import Element
@@ -13,7 +14,7 @@ from pressfits.results import Displacement, Force, Result, Strain, Stress
 _ENTRY_LENGTH = 12
 _CMAP = "jet"
 
-Material = namedtuple("Material", "name youngs_modulus poissons_ratio density")
+Material = namedtuple("Material", "name youngs_modulus poissons_ratio")
 
 
 class PressFitModel:
@@ -24,6 +25,9 @@ class PressFitModel:
         self.elements = mesh.get_elements()
         self.nodes = mesh.get_nodes()
         self.name = name
+        self.inp_str = ""
+        self.nodal_results = ""
+        self.elemental_results = ""
 
     def run_model(self, inner_material, outer_material):
         """Creates an input file and solves the model"""
@@ -35,9 +39,19 @@ class PressFitModel:
 
     def _create_input_file(self, inner_material, outer_material):
         """Creates a .inp file representing the model"""
-        results_str = self.mesh.get_inp_str(inner_material, outer_material)
+        self.inp_str = self.mesh.get_inp_str(inner_material, outer_material)
         with open(f"{self.name}.inp", "w") as f:
-            f.write(results_str)
+            f.write(self.inp_str)
+
+    def get_nodal_results_str(self):
+        with open(f"{self.name}.frd", "r") as file:
+            data = file.read()
+        return data
+
+    def get_elemental_results_str(self):
+        with open(f"{self.name}.dat", "r") as file:
+            data = file.read()
+        return data
 
     def read_nodal_results(self):
         """Read nodal results from a .frd file"""

@@ -2,6 +2,7 @@ import unittest
 from time import time
 
 import matplotlib.pyplot as plt
+
 from pressfits.element import Element
 from pressfits.model import AxisymmetricPressFitModel, Material
 from pressfits.node import Node
@@ -15,14 +16,9 @@ class TestAxisymmetricPressFitModel(unittest.TestCase):
             0.1  # Percent allowable difference allowed from theoretical model
         )
 
-        steel = Material(
-            name="Steel", youngs_modulus=2.1e11, poissons_ratio=0.3, density=7800
-        )
+        steel = Material(name="Steel", youngs_modulus=2.1e11, poissons_ratio=0.3)
         al_6061 = Material(
-            name="Aluminium",
-            youngs_modulus=6.89e10,
-            poissons_ratio=0.33,
-            density=2700,
+            name="Aluminium", youngs_modulus=6.89e10, poissons_ratio=0.33
         )
 
         model = AxisymmetricPressFitModel(
@@ -68,14 +64,9 @@ class TestAxisymmetricPressFitModel(unittest.TestCase):
         part_0 = []
         part_1 = []
 
-        steel = Material(
-            name="Steel", youngs_modulus=2.1e11, poissons_ratio=0.3, density=7800
-        )
+        steel = Material(name="Steel", youngs_modulus=2.1e11, poissons_ratio=0.3)
         al_6061 = Material(
-            name="Aluminium",
-            youngs_modulus=6.89e10,
-            poissons_ratio=0.33,
-            density=2700,
+            name="Aluminium", youngs_modulus=6.89e10, poissons_ratio=0.33
         )
 
         for line_count in line_counts:
@@ -119,14 +110,9 @@ class TestAxisymmetricPressFitModel(unittest.TestCase):
 
         times = []
 
-        steel = Material(
-            name="Steel", youngs_modulus=2.1e11, poissons_ratio=0.3, density=7800
-        )
+        steel = Material(name="Steel", youngs_modulus=2.1e11, poissons_ratio=0.3)
         al_6061 = Material(
-            name="Aluminium",
-            youngs_modulus=6.89e10,
-            poissons_ratio=0.33,
-            density=2700,
+            name="Aluminium", youngs_modulus=6.89e10, poissons_ratio=0.33
         )
 
         for line_count in line_counts:

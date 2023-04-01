@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 
 import matplotlib.pyplot as plt
+
 import pressfits.curves as curves
 from pressfits.curves import VerticalLine
 
 YOUNGS_MODULUS = 210000000000
 POISSONS_RATIO = 0.3
-DENSITY = 7800
 
 _FP_ALLOWANCE = 0.0001
 
@@ -223,8 +223,6 @@ class ConcentricMesh(ABC):
         string = f"*MATERIAL,NAME={material_inner.name}\n"
         string += "*ELASTIC\n"
         string += f"{material_inner.youngs_modulus},{material_inner.poissons_ratio}\n"
-        string += "*DENSITY\n"
-        string += f"{material_inner.density}\n"
 
         if material_outer != material_inner:
             string += f"*MATERIAL,NAME={material_outer.name}\n"
@@ -232,8 +230,6 @@ class ConcentricMesh(ABC):
             string += (
                 f"{material_outer.youngs_modulus},{material_outer.poissons_ratio}\n"
             )
-            string += "*DENSITY\n"
-            string += f"{material_outer.density}\n"
 
         string += (
             f"*SOLID SECTION,ELSET=PART0_elements,MATERIAL={material_inner.name}\n"

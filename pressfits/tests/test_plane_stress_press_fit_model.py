@@ -14,14 +14,11 @@ class TestPlaneStressPressFitModel(unittest.TestCase):
             0.2  # Percent allowable difference allowed from theoretical model
         )
 
-        steel = Material(
-            name="Steel", youngs_modulus=2.1e11, poissons_ratio=0.3, density=7800
-        )
+        steel = Material(name="Steel", youngs_modulus=2.1e11, poissons_ratio=0.3)
         al_6061 = Material(
             name="Aluminium",
             youngs_modulus=6.89e10,
             poissons_ratio=0.33,
-            density=2700,
         )
 
         model = PlaneStressPressFitModel(0.4, 0.5, 0.5001, 0.6, "Press_Model")
@@ -78,14 +75,9 @@ class TestPlaneStressPressFitModel(unittest.TestCase):
             0.1  # Percent allowable difference allowed from theoretical model
         )
 
-        steel = Material(
-            name="Steel", youngs_modulus=2.1e11, poissons_ratio=0.3, density=7800
-        )
+        steel = Material(name="Steel", youngs_modulus=2.1e11, poissons_ratio=0.3)
         al_6061 = Material(
-            name="Aluminium",
-            youngs_modulus=6.89e10,
-            poissons_ratio=0.33,
-            density=2700,
+            name="Aluminium", youngs_modulus=6.89e10, poissons_ratio=0.33
         )
 
         model = PlaneStressPressFitModel(0.02, 0.03, 0.0301, 0.05, "Press_Model")
