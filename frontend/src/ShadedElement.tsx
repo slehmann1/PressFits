@@ -50,7 +50,7 @@ class ShadedElement extends React.Component<
 
   componentWillReceiveProps(props: any) {
     const nodes = props.element.getNodes();
-    this.state = {
+    this.setState({
       value: props.value,
       x: nodes[0].visX,
       y: nodes[0].visY,
@@ -61,7 +61,7 @@ class ShadedElement extends React.Component<
       colours: props.colours,
       partNumber: props.partNumber,
       element: props.element,
-    };
+    });
   }
 
   /**

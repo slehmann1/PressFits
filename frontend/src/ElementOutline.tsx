@@ -22,10 +22,10 @@ class ElementOutline extends React.Component<
   }
 
   componentWillReceiveProps(props: any) {
-    this.state = {
+    this.setState({
       nodes: props.element.getNodes(),
       xScale: props.xScale,
-    };
+    });
   }
 
   /**
@@ -66,6 +66,10 @@ class ElementOutline extends React.Component<
         visY: visY,
         x: x,
         y: y,
+        id:
+          this.state.nodes[nodeIndex].id +
+          "L" +
+          this.state.nodes[nodeIndex + 1].id,
         className: className,
       });
     }
@@ -87,6 +91,10 @@ class ElementOutline extends React.Component<
       visY: visY,
       x: x,
       y: y,
+      id:
+        this.state.nodes[0].id +
+        "L" +
+        this.state.nodes[this.CORNER_NODE_COUNT - 1].id,
       className: className,
     });
 
@@ -99,17 +107,15 @@ class ElementOutline extends React.Component<
       <g>
         {/*Nodes*/}
         {this.state.nodes.map((node, i) => (
-          <g>
-            <circle
-              cx={node.visX}
-              cy={node.visY}
-              r="1.5"
-              className={
-                "node " + (node.partNumber == 0 ? "p_0-node" : "p_1-node")
-              }
-              key={node.id}
-            />
-          </g>
+          <circle
+            cx={node.visX}
+            cy={node.visY}
+            r="1.5"
+            className={
+              "node " + (node.partNumber == 0 ? "p_0-node" : "p_1-node")
+            }
+            key={node.id}
+          />
         ))}
         {/*Mirrored Nodes*/}
         {this.state.nodes.map((node, i) => (
@@ -120,7 +126,7 @@ class ElementOutline extends React.Component<
             className={
               "node " + (node.partNumber == 0 ? "p_0-node" : "p_1-node")
             }
-            key={String(node.id) + "Mirrored"}
+            key={node.id + "M"}
           />
         ))}
         {/*Lines*/}
@@ -131,6 +137,7 @@ class ElementOutline extends React.Component<
             y1={line.visY[0]}
             y2={line.visY[1]}
             className={"element-line " + line.className}
+            key={line.id}
           />
         ))}
 
@@ -142,6 +149,7 @@ class ElementOutline extends React.Component<
             y1={line.visY[0]}
             y2={line.visY[1]}
             className={"element-line " + line.className}
+            key={line.id + "M"}
           />
         ))}
       </g>

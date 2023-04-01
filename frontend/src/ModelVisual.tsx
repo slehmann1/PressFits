@@ -65,6 +65,7 @@ class ModelVisual extends React.Component<
             element={element}
             partNumber={0}
             xScale={this.state.scalingFactors.xScale}
+            key={i}
           />
         ))}
 
@@ -72,6 +73,7 @@ class ModelVisual extends React.Component<
           <ElementOutline
             element={element}
             xScale={this.state.scalingFactors.xScale}
+            key={i}
           />
         ))}
 

@@ -47,7 +47,7 @@ class Scale extends React.Component<
   }
 
   componentWillReceiveProps(props: any) {
-    this.state = {
+    this.setState({
       minValue: props.minValue,
       maxValue: props.maxValue,
       colours: props.colours,
@@ -56,7 +56,7 @@ class Scale extends React.Component<
       height: props.height,
       width: props.width,
       units: props.units,
-    };
+    });
   }
   NUM_VALUES = 10;
   TEXT_X_OFFSET = 20;
@@ -71,7 +71,8 @@ class Scale extends React.Component<
             {this.state.colours.map((colour: Colour, i) => (
               <stop
                 offset={(i / (this.state.colours.length - 1)) * 100 + "%"}
-                stop-color={colour.toString()}
+                stopColor={colour.toString()}
+                key={i}
               />
             ))}
           </linearGradient>
@@ -93,6 +94,7 @@ class Scale extends React.Component<
               ((this.state.height - this.TEXT_Y_OFFSET) * i) /
                 (this.NUM_VALUES - 1)
             }
+            key={i}
             className="scale-text"
           >
             {textValues[i]}
