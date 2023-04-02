@@ -54,8 +54,9 @@ class App extends React.Component {
       data: JSON.stringify(inputs),
       contentType: "application/json; charset=utf-8",
       processData: false,
-      success: function () {
-        console.log("Data sent successfully");
+      success: function (data) {
+        console.log("Calculation completed successfully");
+        console.log(data);
       },
     });
   }

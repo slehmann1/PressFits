@@ -135,7 +135,10 @@ class PressView(REST_Views.APIView):
 
         return Material(
             name=f"{part_prefix}_mat",
-            youngs_modulus=float(request.data[part_prefix]["youngsModulus"]),
+            youngs_modulus=float(request.data[part_prefix]["youngsModulus"])
+            * 1000
+            * 1000
+            * 1000,  # Convert from GPa to Pa
             poissons_ratio=float(request.data[part_prefix]["poissonsRatio"]),
         )
 
@@ -151,8 +154,9 @@ class PressView(REST_Views.APIView):
             tuple: Inner Diameter, Outer Diameter, Length, x_offset
         """
 
+        # Convert from mm to m
         return (
-            float(request.data[part_prefix]["innerDiameter"]),
-            float(request.data[part_prefix]["outerDiameter"]),
-            float(request.data[part_prefix]["length"]),
+            float(request.data[part_prefix]["innerDiameter"]) / 1000,
+            float(request.data[part_prefix]["outerDiameter"]) / 1000,
+            float(request.data[part_prefix]["length"]) / 1000,
         )
