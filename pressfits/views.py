@@ -154,7 +154,7 @@ class PressView(REST_Views.APIView):
             tuple: Inner Diameter, Outer Diameter, Length, x_offset
         """
 
-        # Convert from mm to m
+        # Convert from mm diameter to m radius
         return (
             float(request.data[part_prefix]["innerDiameter"]) / 1000,
             float(request.data[part_prefix]["outerDiameter"]) / 1000,

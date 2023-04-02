@@ -95,7 +95,7 @@ class Mesh {
     splitString = splitString[1].split("*NSET,NSET=PART0_nodes");
     splitString = splitString[1].split("*NSET,NSET=PART1_nodes");
     this.assignPartToNodes(splitString[0], 0);
-    splitString = splitString[1].split("*MATERIAL,NAME=Steel");
+    splitString = splitString[1].split("*MATERIAL,NAME");
     this.assignPartToNodes(splitString[0], 1);
     // TODO: Add part elements and nodes to the part - > Think about if this is needed to display the results
   }

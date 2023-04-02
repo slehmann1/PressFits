@@ -168,7 +168,6 @@ class ConcentricMesh(ABC):
         for arc_ in arcs:
             for node in arc_.nodes:
                 string += str(node) + "\n"
-        string += "\n"
 
         # Add elements
         elements = self.p_0_elements.copy()
@@ -177,7 +176,6 @@ class ConcentricMesh(ABC):
         string += f"*ELEMENT, TYPE={self.element_inp_name}, ELSET=EAll\n"
         for element in elements:
             string += str(element) + "\n"
-        string += "\n"
 
         # Add node sets
         string += self._nodeset_string(self.l_1, "L1_nodes")

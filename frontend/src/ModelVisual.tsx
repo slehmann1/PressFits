@@ -37,6 +37,16 @@ class ModelVisual extends React.Component<
     this.ref = React.createRef();
   }
 
+  componentWillReceiveProps(props: any) {
+    for (let i = 0; i < props.mesh.nodes.length; i++) {
+      props.mesh.nodes[i].setScalingFactor(this.state.scalingFactors);
+    }
+    this.setState({
+      mesh: props.mesh,
+    });
+    this.rescale();
+  }
+
   render() {
     this.calcMeshRange();
     let colours = [

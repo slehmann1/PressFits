@@ -18,6 +18,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      meshString: "",
+      nodalResultsString: "",
+      elementalResultsString: "",
+    };
   }
   render() {
     return (
@@ -28,7 +33,12 @@ class App extends React.Component {
           </Row>
           <Row style={{ marginTop: "10px" }}>
             <Col>
-              <ModelVisual mesh={new Mesh()} />
+              {this.state.meshString.length > 0 && (
+                <ModelVisual mesh={new Mesh(this.state.meshString)} />
+              )}
+              {this.state.meshString.length == 0 && (
+                <ModelVisual mesh={new Mesh()} />
+              )}
             </Col>
             <Col>
               <Results />
@@ -43,6 +53,7 @@ class App extends React.Component {
   }
   calculate(inputs) {
     console.log("Calculate:");
+    let self = this;
     console.log(inputs);
 
     $.ajax({
@@ -57,6 +68,11 @@ class App extends React.Component {
       success: function (data) {
         console.log("Calculation completed successfully");
         console.log(data);
+        self.setState({
+          meshString: data.mesh_string,
+          nodalResultsString: data.nodal_results_string,
+          elementalResultsString: data.elemental_results_string,
+        });
       },
     });
   }
