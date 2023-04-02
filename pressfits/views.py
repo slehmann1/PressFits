@@ -1,7 +1,10 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
+from rest_framework import exceptions
 from rest_framework import views as REST_Views
 from rest_framework.response import Response
+from rest_framework.views import exception_handler
 
 from pressfits.model import AxisymmetricPressFitModel, Material
 from pressfits.serializers import PressSerializer
@@ -13,14 +16,30 @@ class PressFit(View):
 
 
 class PressView(REST_Views.APIView):
-    def get(self, request):
+    def post(self, request):
+        print("Recieved Request:")
+        print(request.data)
+
+        # TODO: Validate inputs
 
         # Process post data
-        p_0_material = self.get_material(request, "p_0_")
-        p_1_material = self.get_material(request, "p_1_")
-        [p_0_id, p_0_od, p_0_length] = self.get_part_parameters(request, "p_0_")
-        [p_1_id, p_1_od, p_1_length] = self.get_part_parameters(request, "p_1_")
-        x_offset = request.POST.get["x_offset"]
+        p_0_material = self.get_material(request, "innerPart")
+        p_1_material = self.get_material(request, "outerPart")
+        [p_0_id, p_0_od, p_0_length] = self.get_part_parameters(request, "innerPart")
+        [p_1_id, p_1_od, p_1_length] = self.get_part_parameters(request, "outerPart")
+        x_offset = float(request.data["outerPart"]["xOffset"])
+
+        if not self.inputs_are_valid(
+            p_0_material,
+            p_1_material,
+            [p_0_id, p_0_od, p_0_length],
+            [p_1_id, p_1_od, p_1_length],
+            x_offset,
+        ):
+            response = exception_handler(exceptions.APIException(), None)
+            response.data["status_code"] = 400
+            response.data["detail"] = "Invalid Inputs"
+            return response
 
         model = AxisymmetricPressFitModel(
             p_0_id,
@@ -43,6 +62,66 @@ class PressView(REST_Views.APIView):
         return Response(results)
 
     @staticmethod
+    def inputs_are_valid(p_0_material, p_1_material, p_0_dims, p_1_dims, x_offset):
+        # Check materials are valid
+        if not PressView.is_positive_numbers(
+            (
+                p_0_material.youngs_modulus,
+                p_0_material.poissons_ratio,
+                p_1_material.youngs_modulus,
+                p_1_material.poissons_ratio,
+            )
+        ):
+            return False
+
+        # Check poissons ratios
+        if p_0_material.poissons_ratio > 0.5 or p_1_material.poissons_ratio > 0.5:
+            return False
+
+        # Check dimensions
+        if not PressView.is_positive_numbers(
+            p_0_dims
+        ) or not PressView.is_positive_numbers(p_1_dims):
+            return False
+
+        # Check OD bigger than IDs
+        if not p_0_dims[0] < p_0_dims[1] or not p_1_dims[0] < p_1_dims[1]:
+            return False
+
+        # Check p_1 bigger than p_0
+        if p_0_dims[0] > p_1_dims[0]:
+            return False
+
+        # Check intersection:
+        if p_0_dims[1] < p_1_dims[0]:
+            return False
+
+        if not isinstance(x_offset, float) and not isinstance(x_offset, int):
+            return False
+
+        # Check parts intersect axially
+        if not x_offset < p_0_dims[2]:
+            return False
+
+        return True
+
+    @staticmethod
+    def is_positive_numbers(values):
+        for value in values:
+            if not PressView.is_positive_number(value):
+                return False
+        return True
+
+    @staticmethod
+    def is_positive_number(value):
+        if not isinstance(value, float) and not isinstance(value, int):
+            return False
+        if value <= 0:
+            return False
+
+        return True
+
+    @staticmethod
     def get_material(request, part_prefix):
         """Gets a material from a request post description
 
@@ -56,8 +135,8 @@ class PressView(REST_Views.APIView):
 
         return Material(
             name=f"{part_prefix}_mat",
-            youngs_modulus=request.POST.get[f"{part_prefix}_youngs_modulus"],
-            poissons_ratio=request.post.get[f"{part_prefix}_poissons_ratio"],
+            youngs_modulus=float(request.data[part_prefix]["youngsModulus"]),
+            poissons_ratio=float(request.data[part_prefix]["poissonsRatio"]),
         )
 
     @staticmethod
@@ -73,7 +152,7 @@ class PressView(REST_Views.APIView):
         """
 
         return (
-            request.POST.get[f"{part_prefix}_inner_diameter"],
-            request.post.get[f"{part_prefix}_outer_diameter"],
-            request.post.get[f"{part_prefix}_length"],
+            float(request.data[part_prefix]["innerDiameter"]),
+            float(request.data[part_prefix]["outerDiameter"]),
+            float(request.data[part_prefix]["length"]),
         )

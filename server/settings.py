@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "pressfits.apps.PressfitsConfig",
     "rest_framework",
     "django_extensions",
+    "corsheaders",  # TODO: Remove in production
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # TODO: Remove in production
 ]
 
 ROOT_URLCONF = "server.urls"
@@ -83,6 +85,12 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+
+# TODO: Remove in production
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
 
 
 # Password validation

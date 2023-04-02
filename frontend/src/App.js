@@ -4,6 +4,8 @@ import Explanation from "./Explanation.js";
 import ModelVisual from "./ModelVisual.tsx";
 import InputBar from "./InputBar.js";
 import { Mesh } from "./mesh";
+import $ from "jquery";
+import Cookies from "js-cookie";
 
 import React, { Component, ReactDOM } from "react";
 
@@ -42,6 +44,20 @@ class App extends React.Component {
   calculate(inputs) {
     console.log("Calculate:");
     console.log(inputs);
+
+    $.ajax({
+      url: "http://127.0.0.1:8000/press",
+      headers: {
+        "X-CSRFToken": Cookies.get("csrftoken"),
+      },
+      type: "POST",
+      data: JSON.stringify(inputs),
+      contentType: "application/json; charset=utf-8",
+      processData: false,
+      success: function () {
+        console.log("Data sent successfully");
+      },
+    });
   }
 }
 

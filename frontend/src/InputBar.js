@@ -50,14 +50,15 @@ class InputBar extends React.Component {
     );
   }
 
+  // TODO:
   inputIsValid() {
     return true;
   }
 
   genInputs() {
     return {
-      inner_part: this.InnerPart.state,
-      outer_part: this.OuterPart.state,
+      innerPart: this.InnerPart.state,
+      outerPart: this.OuterPart.state,
       frictionCoefficient: this.FurtherInputs.state.frictionCoefficient,
     };
   }
@@ -251,6 +252,8 @@ class InputGroup extends React.Component {
         <input
           className="form-control"
           type="number"
+          min="0"
+          step="0.001"
           onChange={(evt) => this.updateInputValue(evt)}
         />
       </div>
