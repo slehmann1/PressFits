@@ -52,10 +52,12 @@ class PressView(REST_Views.APIView):
             "Press_Fit",
         )
         model.run_model(p_0_material, p_1_material)
+        model.read_element_results()
+        model.read_nodal_results()
         model_data = {
             "mesh_string": model.inp_str,
-            "elemental_results_string": model.get_elemental_results_str(),
-            "nodal_results_string": model.get_nodal_results_str(),
+            "elemental_results_string": model.get_elemental_stresses_summary(),
+            "nodal_results_string": model.get_nodal_displacements_summary(),
         }
 
         results = PressSerializer(model_data).data

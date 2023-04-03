@@ -203,6 +203,25 @@ class PressFitModel:
                 print(f"Error Key: {key}, Node: {node.id}")
         self.nodal_plot(x, y, values, "Von Mises Stress (MPA)")
 
+    def get_elemental_stresses_summary(self):
+        return {element.id: self.mean_stress(element) for element in self.elements}
+
+    def get_nodal_displacements_summary(self, key=101):
+        return {
+            node.id: node.results[key].displacement.get_total_displacement()
+            for node in self.nodes
+        }
+
+    @staticmethod
+    def mean_stress(element):
+        vm_stresses = [stress.get_von_mises() for stress in element.results]
+
+        if len(vm_stresses) == 0:
+            raise IndexError(f"No stress results within element {element}")
+        mean_stress = sum(vm_stresses) / len(vm_stresses) / 1000**2
+
+        return mean_stress
+
     def plot_element_mean_vm_stress(self):
         """Create a matplotlib plot of the mean Von Mises stress across elements"""
         print("Showing elements")
