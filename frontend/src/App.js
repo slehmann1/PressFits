@@ -2,7 +2,8 @@ import "./App.css";
 import { Results } from "./ResultsPane.js";
 import Explanation from "./Explanation.js";
 import ModelVisual from "./ModelVisual.tsx";
-import InputBar from "./InputBar.js";
+import { PartSpecification } from "./PartInputs";
+import { InputBar } from "./InputBar.js";
 import { Mesh } from "./mesh";
 import $ from "jquery";
 import Cookies from "js-cookie";
@@ -22,14 +23,41 @@ class App extends React.Component {
       meshString: "",
       nodalResultsString: "",
       elementalResultsString: "",
+      innerPart:
+        JSON.parse(window.localStorage.getItem("InnerPart")) ||
+        new PartSpecification(0, 0, 0, 0, 0, 0, 0, 0),
+
+      outerPart:
+        JSON.parse(window.localStorage.getItem("OuterPart")) ||
+        new PartSpecification(0, 0, 0, 0, 0, 0, 0, 0),
+
+      frictionCoefficient: 0.2,
     };
+    this.updatePartSpecification = this.updatePartSpecification.bind(this);
+    this.setState = this.setState.bind(this);
   }
   render() {
     return (
       <div className="App">
         <Container>
           <Row style={{ marginTop: "10px" }}>
-            <InputBar app={this} />
+            <InputBar
+              app={this}
+              innerPart={this.state.innerPart}
+              outerPart={this.state.outerPart}
+              frictionCoefficient={this.state.frictionCoefficient}
+              updatePartSpecification={this.updatePartSpecification}
+              calculateCallback={(frictionCoefficient) =>
+                this.calculate(frictionCoefficient)
+              }
+              updateFrictionCoefficient={(frictionCoefficient) =>
+                this.setState((state) => {
+                  console.log("UPDATE");
+                  state.frictionCoefficient = frictionCoefficient;
+                  return state;
+                })
+              }
+            />
           </Row>
           <Row style={{ marginTop: "10px" }}>
             <Col>
@@ -51,7 +79,43 @@ class App extends React.Component {
       </div>
     );
   }
-  calculate(inputs) {
+
+  setState(state) {
+    window.localStorage.setItem(
+      "InnerPart",
+      JSON.stringify(this.state.innerPart)
+    );
+    window.localStorage.setItem(
+      "OuterPart",
+      JSON.stringify(this.state.outerPart)
+    );
+    window.localStorage.setItem(
+      "FrictionCoefficient",
+      this.state.FrictionCoefficient
+    );
+    super.setState(state);
+  }
+
+  updatePartSpecification(isInner, value, valueName) {
+    if (isInner) {
+      this.setState((state) => {
+        state.innerPart[valueName] = value;
+        return state.innerPart;
+      });
+    } else {
+      this.setState((state) => {
+        state.outerPart[valueName] = value;
+        return state.outerPart;
+      });
+    }
+  }
+
+  calculate() {
+    let inputs = {
+      frictionCoefficient: this.state.frictionCoefficient,
+      innerPart: this.state.innerPart,
+      outerPart: this.state.outerPart,
+    };
     console.log("Calculate:");
     let self = this;
     console.log(inputs);
