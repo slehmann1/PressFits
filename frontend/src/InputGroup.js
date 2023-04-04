@@ -15,7 +15,9 @@ export class InputGroup extends React.Component {
           min="0"
           step="0.001"
           value={this.props.value || 0}
-          onChange={(evt) => this.props.changeCallback(evt.target.value)}
+          onChange={(evt) =>
+            this.props.changeCallback(Number(evt.target.value))
+          }
         />
       </div>
     );

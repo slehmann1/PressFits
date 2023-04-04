@@ -2,7 +2,7 @@ import "./App.css";
 import { Results } from "./ResultsPane.js";
 import Explanation from "./Explanation.js";
 import ModelVisual from "./ModelVisual.tsx";
-import { PartSpecification } from "./PartInputs";
+import { PartSpecification } from "./PartSpecification";
 import { InputBar } from "./InputBar.js";
 import { Mesh } from "./mesh";
 import $ from "jquery";
@@ -15,6 +15,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import { AnalyticalResult } from "./AnalyticalResult";
 
 class App extends React.Component {
   constructor(props) {
@@ -108,6 +109,7 @@ class App extends React.Component {
         return state.outerPart;
       });
     }
+    new AnalyticalResult(this.state.innerPart, this.state.outerPart);
   }
 
   calculate() {

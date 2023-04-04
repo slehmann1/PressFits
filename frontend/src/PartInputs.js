@@ -110,27 +110,3 @@ export class PartInputs extends React.Component {
     );
   }
 }
-
-export class PartSpecification {
-  constructor(
-    innerDiameter,
-    outerDiameter,
-    length,
-    xOffset,
-    youngsModulus,
-    poissonsRatio,
-    CTE,
-    temperature
-  ) {
-    return {
-      innerDiameter: innerDiameter,
-      outerDiameter: outerDiameter,
-      length: length,
-      xOffset: xOffset,
-      youngsModulus: youngsModulus,
-      poissonsRatio: poissonsRatio,
-      CTE: CTE,
-      temperature: temperature,
-    };
-  }
-}
