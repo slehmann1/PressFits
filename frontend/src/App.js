@@ -109,7 +109,11 @@ class App extends React.Component {
         return state.outerPart;
       });
     }
-    new AnalyticalResult(this.state.innerPart, this.state.outerPart);
+    new AnalyticalResult(
+      this.state.innerPart,
+      this.state.outerPart,
+      this.state.frictionCoefficient
+    );
   }
 
   calculate() {
