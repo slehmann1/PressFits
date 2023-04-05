@@ -4,6 +4,8 @@ export class AnalyticalResult {
   contactPressure: number;
   maxInnerVMStress: number;
   maxOuterVMStress: number;
+  minInnerVMStress: number;
+  minOuterVMStress: number;
   axialForceCapacity: number;
   torqueCapacity: number;
 
@@ -49,6 +51,20 @@ export class AnalyticalResult {
       outerPart.outerDiameter / 2,
       outerPart.innerDiameter / 2
     );
+    let minInnerTangentialStress = this.getTangentialStress(
+      this.contactPressure,
+      0,
+      innerPart.innerDiameter / 2,
+      innerPart.outerDiameter / 2,
+      innerPart.outerDiameter / 2
+    );
+    let minOuterTangentialStress = this.getTangentialStress(
+      this.contactPressure,
+      0,
+      outerPart.innerDiameter / 2,
+      outerPart.outerDiameter / 2,
+      outerPart.outerDiameter / 2
+    );
 
     let peakInnerRadialStress = this.getRadialStress(
       this.contactPressure,
@@ -64,6 +80,20 @@ export class AnalyticalResult {
       outerPart.outerDiameter / 2,
       outerPart.innerDiameter / 2
     );
+    let minInnerRadialStress = this.getRadialStress(
+      this.contactPressure,
+      0,
+      innerPart.innerDiameter / 2,
+      innerPart.outerDiameter / 2,
+      innerPart.outerDiameter / 2
+    );
+    let minOuterRadialStress = this.getRadialStress(
+      this.contactPressure,
+      0,
+      outerPart.innerDiameter / 2,
+      outerPart.outerDiameter / 2,
+      outerPart.outerDiameter / 2
+    );
 
     this.maxInnerVMStress = this.getVonMisesStress(
       peakInnerTangentialStress,
@@ -72,6 +102,14 @@ export class AnalyticalResult {
     this.maxOuterVMStress = this.getVonMisesStress(
       peakOuterTangentialStress,
       peakOuterRadialStress
+    );
+    this.minInnerVMStress = this.getVonMisesStress(
+      minInnerTangentialStress,
+      minInnerRadialStress
+    );
+    this.minOuterVMStress = this.getVonMisesStress(
+      minOuterTangentialStress,
+      minOuterRadialStress
     );
 
     this.torqueCapacity = this.getTorqueCapacity(

@@ -70,7 +70,7 @@ class App extends React.Component {
               )}
             </Col>
             <Col>
-              <Results />
+              <Results analyticalResult={this.state.analyticalResult} />
             </Col>
           </Row>
           <Row style={{ marginTop: "10px" }}>
@@ -109,11 +109,13 @@ class App extends React.Component {
         return state.outerPart;
       });
     }
-    new AnalyticalResult(
-      this.state.innerPart,
-      this.state.outerPart,
-      this.state.frictionCoefficient
-    );
+    this.setState({
+      analyticalResult: new AnalyticalResult(
+        this.state.innerPart,
+        this.state.outerPart,
+        this.state.frictionCoefficient
+      ),
+    });
   }
 
   calculate() {

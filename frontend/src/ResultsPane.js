@@ -17,7 +17,7 @@ class Results extends React.Component {
             <FiniteElementSolution />
           </Col>
           <Col>
-            <AnalyticalSolution />
+            <AnalyticalSolution result={this.props.analyticalResult} />
           </Col>
         </Row>
       </Container>
@@ -26,68 +26,103 @@ class Results extends React.Component {
 }
 
 class Solution extends React.Component {
+  DECIMAL_PLACES = 1;
   constructor(props) {
     super(props);
   }
   render() {
+    if (!this.props.result) {
+      return <div></div>;
+    }
     return (
       <div className="Solution">
         <h3> {this.props.title}</h3>
         <p>
           Interface pressure:&nbsp;
-          {this.props.intPressure} MPa
+          {this.roundToNDecimals(
+            this.props.result.contactPressure,
+            this.DECIMAL_PLACES
+          )}{" "}
+          MPa
         </p>
         <p>
           Axial force capacity at interface:&nbsp;
-          {this.props.forceCapacity} N
+          {this.roundToNDecimals(
+            this.props.result.axialForceCapacity,
+            this.DECIMAL_PLACES
+          )}{" "}
+          N
         </p>
         <p>
           Torque capacity at interface:&nbsp;
-          {this.props.torqueCapacity} Nm
+          {this.roundToNDecimals(
+            this.props.result.torqueCapacity / 1000,
+            this.DECIMAL_PLACES
+          )}{" "}
+          Nm
         </p>
 
         <h4> Von Mises Stresses </h4>
         <h5> Inner Part: </h5>
         <p>
           Stress at inner wall:&nbsp;
-          {this.props.p0InnerStress} MPa
+          {this.roundToNDecimals(
+            this.props.result.maxInnerVMStress,
+            this.DECIMAL_PLACES
+          )}{" "}
+          MPa
         </p>
         <p>
           Stress at outer wall:&nbsp;
-          {this.props.p0OuterStress} MPa
+          {this.roundToNDecimals(
+            this.props.result.minInnerVMStress,
+            this.DECIMAL_PLACES
+          )}{" "}
+          MPa
         </p>
 
         <h5> Outer Part: </h5>
         <p>
           Stress at inner wall:&nbsp;
-          {this.props.p1InnerStress} MPa
+          {this.roundToNDecimals(
+            this.props.result.maxOuterVMStress,
+            this.DECIMAL_PLACES
+          )}{" "}
+          MPa
         </p>
         <p>
           Stress at outer wall:&nbsp;
-          {this.props.p1OuterStress} MPa
+          {this.roundToNDecimals(
+            this.props.result.minOuterVMStress,
+            this.DECIMAL_PLACES
+          )}{" "}
+          MPa
         </p>
+        {this.props.result.innerDeflection && (
+          <div>
+            <h4> Deflections </h4>
+            <h5> Inner Part </h5>
+            <p>
+              Deflection of inner wall:&nbsp;
+              {this.props.p0InnerDeflection} mm
+            </p>
+            <p>
+              Deflection of outer wall:&nbsp;
+              {this.props.p0OuterDeflection} mm
+            </p>
 
-        <h4> Deflections </h4>
-        <h5> Inner Part </h5>
-        <p>
-          Deflection of inner wall:&nbsp;
-          {this.props.p0InnerDeflection} mm
-        </p>
-        <p>
-          Deflection of outer wall:&nbsp;
-          {this.props.p0OuterDeflection} mm
-        </p>
+            <h5> Outer Part </h5>
+            <p>
+              Deflection of inner wall:&nbsp;
+              {this.props.p1InnerDeflection} mm
+            </p>
 
-        <h5> Outer Part </h5>
-        <p>
-          Deflection of inner wall:&nbsp;
-          {this.props.p1InnerDeflection} mm
-        </p>
-        <p>
-          Deflection of outer wall:&nbsp;
-          {this.props.p1OuterDeflection} mm
-        </p>
-
+            <p>
+              Deflection of outer wall:&nbsp;
+              {this.props.p1OuterDeflection} mm
+            </p>
+          </div>
+        )}
         <h4> Assembly Information</h4>
         <p>
           Required temperature differential if heating outer part:&nbsp;
@@ -104,9 +139,16 @@ class Solution extends React.Component {
       </div>
     );
   }
+  roundToNDecimals(value, n) {
+    return (Math.round(value * Math.pow(10, n)) / Math.pow(10, n)).toFixed(n);
+  }
 }
 
-class AnalyticalSolution extends Solution {}
+class AnalyticalSolution extends Solution {
+  constructor(props) {
+    super(props);
+  }
+}
 
 class FiniteElementSolution extends Solution {}
 
