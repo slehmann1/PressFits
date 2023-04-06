@@ -63,7 +63,10 @@ class App extends React.Component {
           <Row style={{ marginTop: "10px" }}>
             <Col>
               {this.state.meshString.length > 0 && (
-                <ModelVisual mesh={new Mesh(this.state.meshString)} />
+                <ModelVisual
+                  mesh={new Mesh(this.state.meshString)}
+                  elementalResults={this.state.elementalStressResults}
+                />
               )}
               {this.state.meshString.length == 0 && (
                 <ModelVisual mesh={new Mesh()} />
@@ -142,8 +145,8 @@ class App extends React.Component {
         console.log(data);
         self.setState({
           meshString: data.mesh_string,
-          nodalResultsString: data.nodal_results_string,
-          elementalResultsString: data.elemental_results_string,
+          nodalDisplacementResults: data.nodal_displacements,
+          elementalStressResults: data.elemental_stresses,
         });
       },
     });

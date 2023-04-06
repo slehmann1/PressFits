@@ -67,7 +67,7 @@ class Scale extends React.Component<
     return (
       <g>
         <defs>
-          <linearGradient id="Gradient" x1="0" x2="0" y1="0" y2="1">
+          <linearGradient id="Gradient" x1="0" x2="0" y1="1" y2="0">
             {this.state.colours.map((colour: Colour, i) => (
               <stop
                 offset={(i / (this.state.colours.length - 1)) * 100 + "%"}

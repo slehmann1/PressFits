@@ -8,7 +8,7 @@ import ElementOutline from "./ElementOutline";
 import Scale from "./Scale";
 
 class ModelVisual extends React.Component<
-  {},
+  { elementalResults: Object },
   {
     mesh: Mesh;
     scalingFactors: {
@@ -48,13 +48,25 @@ class ModelVisual extends React.Component<
   }
 
   render() {
+    let maxValue = 0;
+    if (this.props.elementalResults) {
+      for (
+        let i = 0;
+        i < Object.values(this.props.elementalResults).length;
+        i++
+      ) {
+        if (Number(Object.values(this.props.elementalResults)[i]) > maxValue) {
+          maxValue = Number(Object.values(this.props.elementalResults)[i]);
+        }
+      }
+    }
     this.calcMeshRange();
     let colours = [
-      new Colour(255, 0, 0),
-      new Colour(255, 255, 0),
-      new Colour(0, 255, 0),
-      new Colour(0, 255, 255),
       new Colour(0, 0, 255),
+      new Colour(0, 255, 255),
+      new Colour(0, 255, 0),
+      new Colour(255, 255, 0),
+      new Colour(255, 0, 0),
     ];
     return (
       <svg
@@ -66,18 +78,20 @@ class ModelVisual extends React.Component<
           p0Dims={new PartDimensions(0.01, 0.01505, 0.015, 0)}
           p1Dims={new PartDimensions(0.015, 0.025, 0.015, 0)}
         ></PartVisual>
-
-        {this.state.mesh.elements.map((element, i) => (
-          <ShadedElement
-            value={70}
-            maxValue={100}
-            colours={colours}
-            element={element}
-            partNumber={0}
-            xScale={this.state.scalingFactors.xScale}
-            key={i}
-          />
-        ))}
+        <g>
+          {this.props.elementalResults &&
+            this.state.mesh.elements.map((element, i) => (
+              <ShadedElement
+                value={Number(Object.values(this.props.elementalResults)[i])}
+                maxValue={maxValue}
+                colours={colours}
+                element={element}
+                partNumber={0}
+                xScale={this.state.scalingFactors.xScale}
+                key={i}
+              />
+            ))}
+        </g>
 
         {this.state.mesh.elements.map((element, i) => (
           <ElementOutline
@@ -89,7 +103,7 @@ class ModelVisual extends React.Component<
 
         <Scale
           minValue={0}
-          maxValue={100}
+          maxValue={maxValue}
           colours={colours}
           x={10}
           y={

@@ -56,8 +56,8 @@ class PressView(REST_Views.APIView):
         model.read_nodal_results()
         model_data = {
             "mesh_string": model.inp_str,
-            "elemental_results_string": model.get_elemental_stresses_summary(),
-            "nodal_results_string": model.get_nodal_displacements_summary(),
+            "elemental_stresses": model.get_elemental_stresses_summary(),
+            "nodal_displacements": model.get_nodal_displacements_summary(),
         }
 
         results = PressSerializer(model_data).data
