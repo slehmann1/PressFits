@@ -126,15 +126,27 @@ class Solution extends React.Component {
         <h4> Assembly Information</h4>
         <p>
           Required temperature differential if heating outer part:&nbsp;
-          {this.props.tempDifferential} °C
+          {this.roundToNDecimals(
+            this.props.result.getOuterTempDifferential() + 20,
+            this.DECIMAL_PLACES
+          )}{" "}
+          °C
         </p>
         <p>
           Required temperature differential if cooling inner part:&nbsp;
-          {this.props.tempDifferential} °C
+          {this.roundToNDecimals(
+            this.props.result.getInnerTempDifferential() + 20,
+            this.DECIMAL_PLACES
+          )}{" "}
+          °C
         </p>
         <p>
           Required force if pressfitting parts together:&nbsp;
-          {this.props.assemblyForce} N
+          {this.roundToNDecimals(
+            this.props.result.axialForceCapacity,
+            this.DECIMAL_PLACES
+          )}{" "}
+          N
         </p>
       </div>
     );
