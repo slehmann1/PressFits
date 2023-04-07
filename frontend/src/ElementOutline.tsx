@@ -110,7 +110,7 @@ class ElementOutline extends React.Component<
           <circle
             cx={node.visX}
             cy={node.visY}
-            r="1.5"
+            r="1"
             className={
               "node " + (node.partNumber == 0 ? "p_0-node" : "p_1-node")
             }
@@ -122,7 +122,7 @@ class ElementOutline extends React.Component<
           <circle
             cx={node.visX - node.x * 2 * this.state.xScale}
             cy={node.visY}
-            r="1.5"
+            r="1"
             className={
               "node " + (node.partNumber == 0 ? "p_0-node" : "p_1-node")
             }

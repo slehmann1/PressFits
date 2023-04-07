@@ -113,7 +113,7 @@ class Scale extends React.Component<
             (this.NUM_VALUES - 1)) *
             i +
             this.state.minValue,
-          2
+          3
         ) +
           " " +
           this.state.units

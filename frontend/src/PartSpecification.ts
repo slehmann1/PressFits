@@ -19,14 +19,14 @@ export class PartSpecification {
     CTE: number,
     temperature: number
   ) {
-    this.innerDiameter = innerDiameter;
-    this.outerDiameter = outerDiameter;
-    this.length = length;
-    this.xOffset = xOffset;
-    this.youngsModulus = youngsModulus;
-    this.poissonsRatio = poissonsRatio;
-    this.CTE = CTE;
-    this.temperature = temperature;
+    this.innerDiameter = Number(innerDiameter);
+    this.outerDiameter = Number(outerDiameter);
+    this.length = Number(length);
+    this.xOffset = Number(xOffset);
+    this.youngsModulus = Number(youngsModulus);
+    this.poissonsRatio = Number(poissonsRatio);
+    this.CTE = Number(CTE);
+    this.temperature = Number(temperature);
   }
 
   static correctForGrowthRate(partSpec: PartSpecification) {

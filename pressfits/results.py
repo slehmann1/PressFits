@@ -9,7 +9,10 @@ class Displacement:
     z: float
 
     def get_total_displacement(self):
-        return (self.x**2 + self.y**2 + self.z**2) ** 0.5
+
+        return (self.x**2 + self.y**2 + self.z**2) ** 0.5 * (
+            -1 if self.x < 0 else 1
+        )
 
 
 @dataclass

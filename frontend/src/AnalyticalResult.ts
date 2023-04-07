@@ -27,8 +27,8 @@ export class AnalyticalResult extends Result {
 
     // Peak stresses occur on inner radii
     let peakInnerTangentialStress = this.getTangentialStress(
-      this.contactPressure,
       0,
+      this.contactPressure,
       innerPart.innerDiameter / 2,
       innerPart.outerDiameter / 2,
       innerPart.innerDiameter / 2
@@ -41,8 +41,8 @@ export class AnalyticalResult extends Result {
       outerPart.innerDiameter / 2
     );
     let minInnerTangentialStress = this.getTangentialStress(
-      this.contactPressure,
       0,
+      this.contactPressure,
       innerPart.innerDiameter / 2,
       innerPart.outerDiameter / 2,
       innerPart.outerDiameter / 2
@@ -56,8 +56,8 @@ export class AnalyticalResult extends Result {
     );
 
     let peakInnerRadialStress = this.getRadialStress(
-      this.contactPressure,
       0,
+      this.contactPressure,
       innerPart.innerDiameter / 2,
       innerPart.outerDiameter / 2,
       innerPart.innerDiameter / 2
@@ -70,8 +70,8 @@ export class AnalyticalResult extends Result {
       outerPart.innerDiameter / 2
     );
     let minInnerRadialStress = this.getRadialStress(
-      this.contactPressure,
       0,
+      this.contactPressure,
       innerPart.innerDiameter / 2,
       innerPart.outerDiameter / 2,
       innerPart.outerDiameter / 2

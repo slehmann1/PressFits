@@ -65,7 +65,8 @@ class App extends React.Component {
               {this.state.meshString.length > 0 && (
                 <ModelVisual
                   mesh={new Mesh(this.state.meshString)}
-                  elementalResults={this.state.elementalStressResults}
+                  elementalStressResults={this.state.elementalStressResults}
+                  nodalDisplacementResults={this.state.nodalDisplacementResults}
                 />
               )}
               {this.state.meshString.length == 0 && (

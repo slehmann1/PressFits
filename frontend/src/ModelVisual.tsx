@@ -6,9 +6,10 @@ import { ShadedElement } from "./ShadedElement";
 import Colour from "./Colour";
 import ElementOutline from "./ElementOutline";
 import Scale from "./Scale";
+import { DisplacementColouredNode } from "./DisplacementColouredNode";
 
 class ModelVisual extends React.Component<
-  { elementalResults: Object },
+  { elementalStressResults: Object; nodalDisplacementResults: Object },
   {
     mesh: Mesh;
     scalingFactors: {
@@ -55,18 +56,51 @@ class ModelVisual extends React.Component<
   }
 
   render() {
-    let maxValue = 0;
-    if (this.props.elementalResults && this.state.shouldDisplayStresses) {
+    let maxStress = 0;
+    let maxDisplacement = 0;
+    let minDisplacement = 0;
+    if (this.props.elementalStressResults && this.state.shouldDisplayStresses) {
       for (
         let i = 0;
-        i < Object.values(this.props.elementalResults).length;
+        i < Object.values(this.props.elementalStressResults).length;
         i++
       ) {
-        if (Number(Object.values(this.props.elementalResults)[i]) > maxValue) {
-          maxValue = Number(Object.values(this.props.elementalResults)[i]);
+        if (
+          Number(Object.values(this.props.elementalStressResults)[i]) >
+          maxStress
+        ) {
+          maxStress = Number(
+            Object.values(this.props.elementalStressResults)[i]
+          );
+        }
+      }
+    } else if (
+      this.props.nodalDisplacementResults &&
+      this.state.shouldDisplayDisplacements
+    ) {
+      for (
+        let i = 0;
+        i < Object.values(this.props.nodalDisplacementResults).length;
+        i++
+      ) {
+        if (
+          Number(Object.values(this.props.nodalDisplacementResults)[i]) >
+          maxDisplacement
+        ) {
+          maxDisplacement = Number(
+            Object.values(this.props.nodalDisplacementResults)[i]
+          );
+        } else if (
+          Number(Object.values(this.props.nodalDisplacementResults)[i]) <
+          minDisplacement
+        ) {
+          minDisplacement = Number(
+            Object.values(this.props.nodalDisplacementResults)[i]
+          );
         }
       }
     }
+
     this.calcMeshRange();
     let colours = [
       new Colour(0, 0, 255),
@@ -87,12 +121,14 @@ class ModelVisual extends React.Component<
             p1Dims={new PartDimensions(0.015, 0.025, 0.015, 0)}
           ></PartVisual>
           <g>
-            {this.props.elementalResults &&
+            {this.props.elementalStressResults &&
               this.state.shouldDisplayStresses &&
               this.state.mesh.elements.map((element, i) => (
                 <ShadedElement
-                  value={Number(Object.values(this.props.elementalResults)[i])}
-                  maxValue={maxValue}
+                  value={Number(
+                    Object.values(this.props.elementalStressResults)[i]
+                  )}
+                  maxValue={maxStress}
                   colours={colours}
                   element={element}
                   partNumber={0}
@@ -110,25 +146,63 @@ class ModelVisual extends React.Component<
                 key={i}
               />
             ))}
-          {this.props.elementalResults && this.state.shouldDisplayStresses && (
-            <Scale
-              minValue={0}
-              maxValue={maxValue}
-              colours={colours}
-              x={10}
-              y={
-                this.state.scalingFactors.yRange[0] *
-                  this.state.scalingFactors.yScale +
-                this.state.scalingFactors.margin
-              }
-              height={
-                this.state.scalingFactors.yRange[1] *
-                this.state.scalingFactors.yScale
-              }
-              width={15}
-              units="MPa"
-            />
-          )}
+          {this.props.elementalStressResults &&
+            this.state.shouldDisplayStresses && (
+              <Scale
+                minValue={0}
+                maxValue={maxStress}
+                colours={colours}
+                x={10}
+                y={
+                  this.state.scalingFactors.yRange[0] *
+                    this.state.scalingFactors.yScale +
+                  this.state.scalingFactors.margin
+                }
+                height={
+                  this.state.scalingFactors.yRange[1] *
+                  this.state.scalingFactors.yScale
+                }
+                width={15}
+                units="MPa"
+              />
+            )}
+          {this.props.nodalDisplacementResults &&
+            this.state.shouldDisplayDisplacements && (
+              <Scale
+                minValue={minDisplacement * 1000}
+                maxValue={maxDisplacement * 1000}
+                colours={colours}
+                x={10}
+                y={
+                  this.state.scalingFactors.yRange[0] *
+                    this.state.scalingFactors.yScale +
+                  this.state.scalingFactors.margin
+                }
+                height={
+                  this.state.scalingFactors.yRange[1] *
+                  this.state.scalingFactors.yScale
+                }
+                width={15}
+                units="μm"
+              />
+            )}
+          {this.props.nodalDisplacementResults &&
+            this.state.shouldDisplayDisplacements &&
+            this.state.mesh.nodes.map((node, i) => (
+              <DisplacementColouredNode
+                value={
+                  Number(
+                    Object.values(this.props.nodalDisplacementResults)[i]
+                  ) * 1000
+                }
+                maxValue={maxDisplacement * 1000}
+                minValue={minDisplacement * 1000}
+                colours={colours}
+                node={node}
+                xScale={this.state.scalingFactors.xScale}
+                key={i}
+              />
+            ))}
         </svg>
         <label className="results-selector">
           <input
@@ -190,6 +264,7 @@ class ModelVisual extends React.Component<
       });
     }
 
+    // @ts-ignore
     this.setState({ [propertyName]: checked });
   }
 

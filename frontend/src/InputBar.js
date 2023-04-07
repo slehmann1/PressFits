@@ -21,7 +21,11 @@ class InputBar extends React.Component {
                 this.InnerPart = component;
               }}
               callback={(value, valueName) => {
-                this.props.updatePartSpecification(true, value, valueName);
+                this.props.updatePartSpecification(
+                  true,
+                  Number(value),
+                  valueName
+                );
               }}
               partSpecifications={this.props.innerPart}
             />
@@ -36,7 +40,11 @@ class InputBar extends React.Component {
                 this.OuterPart = component;
               }}
               callback={(value, valueName) => {
-                this.props.updatePartSpecification(false, value, valueName);
+                this.props.updatePartSpecification(
+                  false,
+                  Number(value),
+                  valueName
+                );
               }}
               partSpecifications={this.props.outerPart}
             />
