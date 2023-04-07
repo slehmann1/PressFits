@@ -132,3 +132,7 @@ h5 {
   font-size: 14px;
   font-family: "Helvetica Neue", Helvetica, Arial sans-serif;
 }
+.results-selector {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}

@@ -76,7 +76,7 @@ class App extends React.Component {
               <Results analyticalResult={this.state.analyticalResult} />
             </Col>
           </Row>
-          <Row style={{ marginTop: "10px" }}>
+          <Row style={{ marginTop: "50px" }}>
             <Explanation />
           </Row>
         </Container>

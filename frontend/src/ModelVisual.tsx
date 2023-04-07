@@ -18,6 +18,9 @@ class ModelVisual extends React.Component<
       xRange: number[];
       yRange: number[];
     };
+    shouldDisplayDisplacements: boolean;
+    shouldDisplayMesh: boolean;
+    shouldDisplayStresses: boolean;
   }
 > {
   ref?: any;
@@ -33,8 +36,12 @@ class ModelVisual extends React.Component<
         xRange: [0, 1],
         yRange: [0, 1],
       },
+      shouldDisplayMesh: true,
+      shouldDisplayStresses: true,
+      shouldDisplayDisplacements: false,
     };
     this.ref = React.createRef();
+    this.handleCheckChange = this.handleCheckChange.bind(this);
   }
 
   componentWillReceiveProps(props: any) {
@@ -49,7 +56,7 @@ class ModelVisual extends React.Component<
 
   render() {
     let maxValue = 0;
-    if (this.props.elementalResults) {
+    if (this.props.elementalResults && this.state.shouldDisplayStresses) {
       for (
         let i = 0;
         i < Object.values(this.props.elementalResults).length;
@@ -69,57 +76,121 @@ class ModelVisual extends React.Component<
       new Colour(255, 0, 0),
     ];
     return (
-      <svg
-        style={{ height: "100%", width: "100%", border: "1px solid red" }}
-        ref={this.ref}
-      >
-        <PartVisual
-          scalingFactors={this.state.scalingFactors}
-          p0Dims={new PartDimensions(0.01, 0.01505, 0.015, 0)}
-          p1Dims={new PartDimensions(0.015, 0.025, 0.015, 0)}
-        ></PartVisual>
-        <g>
-          {this.props.elementalResults &&
+      <div style={{ height: "100%", width: "100%", border: "1px solid red" }}>
+        <svg
+          ref={this.ref}
+          style={{ height: "100%", width: "100%", border: "1px solid red" }}
+        >
+          <PartVisual
+            scalingFactors={this.state.scalingFactors}
+            p0Dims={new PartDimensions(0.01, 0.01505, 0.015, 0)}
+            p1Dims={new PartDimensions(0.015, 0.025, 0.015, 0)}
+          ></PartVisual>
+          <g>
+            {this.props.elementalResults &&
+              this.state.shouldDisplayStresses &&
+              this.state.mesh.elements.map((element, i) => (
+                <ShadedElement
+                  value={Number(Object.values(this.props.elementalResults)[i])}
+                  maxValue={maxValue}
+                  colours={colours}
+                  element={element}
+                  partNumber={0}
+                  xScale={this.state.scalingFactors.xScale}
+                  key={i}
+                />
+              ))}
+          </g>
+
+          {this.state.shouldDisplayMesh &&
             this.state.mesh.elements.map((element, i) => (
-              <ShadedElement
-                value={Number(Object.values(this.props.elementalResults)[i])}
-                maxValue={maxValue}
-                colours={colours}
+              <ElementOutline
                 element={element}
-                partNumber={0}
                 xScale={this.state.scalingFactors.xScale}
                 key={i}
               />
             ))}
-        </g>
-
-        {this.state.mesh.elements.map((element, i) => (
-          <ElementOutline
-            element={element}
-            xScale={this.state.scalingFactors.xScale}
-            key={i}
+          {this.props.elementalResults && this.state.shouldDisplayStresses && (
+            <Scale
+              minValue={0}
+              maxValue={maxValue}
+              colours={colours}
+              x={10}
+              y={
+                this.state.scalingFactors.yRange[0] *
+                  this.state.scalingFactors.yScale +
+                this.state.scalingFactors.margin
+              }
+              height={
+                this.state.scalingFactors.yRange[1] *
+                this.state.scalingFactors.yScale
+              }
+              width={15}
+              units="MPa"
+            />
+          )}
+        </svg>
+        <label className="results-selector">
+          <input
+            type="checkbox"
+            checked={this.state.shouldDisplayMesh}
+            onChange={(evt) =>
+              this.handleCheckChange("shouldDisplayMesh", evt.target.checked)
+            }
           />
-        ))}
+          &nbsp; Display Mesh
+        </label>
+        <label className="results-selector">
+          <input
+            type="checkbox"
+            checked={this.state.shouldDisplayStresses}
+            onChange={(evt) =>
+              this.handleCheckChange(
+                "shouldDisplayStresses",
+                evt.target.checked
+              )
+            }
+          />
+          &nbsp; Elemental Stresses
+        </label>
+        <label className="results-selector">
+          <input
+            type="checkbox"
+            checked={this.state.shouldDisplayDisplacements}
+            onChange={(evt) =>
+              this.handleCheckChange(
+                "shouldDisplayDisplacements",
+                evt.target.checked
+              )
+            }
+          />
+          &nbsp; Nodal Displacements
+        </label>
 
-        <Scale
-          minValue={0}
-          maxValue={maxValue}
-          colours={colours}
-          x={10}
-          y={
-            this.state.scalingFactors.yRange[0] *
-              this.state.scalingFactors.yScale +
-            this.state.scalingFactors.margin
-          }
-          height={
-            this.state.scalingFactors.yRange[1] *
-            this.state.scalingFactors.yScale
-          }
-          width={15}
-          units="MPa"
-        />
-      </svg>
+        <br></br>
+      </div>
     );
+  }
+
+  /**
+   *
+   * @param propertyName The property of the state that should be updated
+   * @param checked Whether the new state is checked
+   * @returns None
+   */
+  handleCheckChange(propertyName: string, checked: any) {
+    // Can only have one of either stresses or displacements displayed at once
+    if (propertyName == "shouldDisplayStresses" && checked) {
+      this.setState({
+        shouldDisplayDisplacements: false,
+      });
+    } else if (propertyName == "shouldDisplayDisplacements" && checked) {
+      this.setState({
+        shouldDisplayStresses: false,
+      });
+    }
+
+    this.setState({ [propertyName]: checked });
   }
 
   componentDidMount(): void {
