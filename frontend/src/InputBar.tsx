@@ -3,9 +3,26 @@ import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
 import { PartInputs } from "./PartInputs";
 import { MiscellaneousInputs } from "./MiscellaneousInputs";
+import { App } from "./App";
+import { PartSpecification } from "./PartSpecification";
 
-class InputBar extends React.Component {
-  constructor(props) {
+class InputBar extends React.Component<
+  {
+    App: App;
+    innerPart: PartSpecification;
+    outerPart: PartSpecification;
+    frictionCoefficient: number;
+    updatePartSpecification: (
+      isInner: boolean,
+      value: number,
+      valueName: string
+    ) => null;
+    calculateCallback: () => null;
+    updateFrictionCoefficient: (value: number) => null;
+  },
+  {}
+> {
+  constructor(props: any) {
     super(props);
     this.submitForm = this.submitForm.bind(this);
     this.inputIsValid = this.inputIsValid.bind(this);
@@ -17,10 +34,7 @@ class InputBar extends React.Component {
           <Row>
             <PartInputs
               name="Inner Part"
-              ref={(component) => {
-                this.InnerPart = component;
-              }}
-              callback={(value, valueName) => {
+              callback={(value: number, valueName: string) => {
                 this.props.updatePartSpecification(
                   true,
                   Number(value),
@@ -36,10 +50,7 @@ class InputBar extends React.Component {
           <Row>
             <PartInputs
               name="Outer Part"
-              ref={(component) => {
-                this.OuterPart = component;
-              }}
-              callback={(value, valueName) => {
+              callback={(value: number, valueName: string) => {
                 this.props.updatePartSpecification(
                   false,
                   Number(value),
@@ -54,7 +65,7 @@ class InputBar extends React.Component {
           </Row>
           <Row>
             <MiscellaneousInputs
-              callback={(value) => {
+              callback={(value: number) => {
                 this.props.updateFrictionCoefficient(value);
               }}
               frictionCoefficient={this.props.frictionCoefficient}

@@ -1,9 +1,9 @@
 import "./App.css";
 import { ResultsPane } from "./ResultsPane.js";
-import Explanation from "./Explanation.js";
+import Explanation from "./Explanation.tsx";
 import ModelVisual from "./ModelVisual.tsx";
 import { PartSpecification } from "./PartSpecification";
-import { InputBar } from "./InputBar.js";
+import { InputBar } from "./InputBar.tsx";
 import { Mesh } from "./mesh";
 import { FiniteElementResult } from "./FiniteElementResult";
 import $ from "jquery";
@@ -87,7 +87,7 @@ class App extends React.Component {
                 outerPart={this.state.outerPart}
               />
             </Col>
-            <Col>
+            <Col style={{ marginLeft: "-120px" }}>
               <ResultsPane
                 analyticalResult={this.state.analyticalResult}
                 finiteElementResult={this.state.feResult}
