@@ -1,15 +1,21 @@
 import React from "react";
 
 import { Mesh } from "./mesh";
-import { PartVisual, PartDimensions } from "./PartVisual";
+import { PartVisual } from "./PartVisual";
 import { ShadedElement } from "./ShadedElement";
 import Colour from "./Colour";
 import ElementOutline from "./ElementOutline";
 import Scale from "./Scale";
 import { DisplacementColouredNode } from "./DisplacementColouredNode";
+import { PartSpecification } from "./PartSpecification";
 
 class ModelVisual extends React.Component<
-  { elementalStressResults: Object; nodalDisplacementResults: Object },
+  {
+    elementalStressResults: Object;
+    nodalDisplacementResults: Object;
+    innerPart: PartSpecification;
+    outerPart: PartSpecification;
+  },
   {
     mesh: Mesh;
     scalingFactors: {
@@ -33,7 +39,7 @@ class ModelVisual extends React.Component<
       scalingFactors: {
         xScale: 1,
         yScale: 1,
-        margin: 120,
+        margin: 30,
         xRange: [0, 1],
         yRange: [0, 1],
       },
@@ -117,8 +123,8 @@ class ModelVisual extends React.Component<
         >
           <PartVisual
             scalingFactors={this.state.scalingFactors}
-            p0Dims={new PartDimensions(0.01, 0.01505, 0.015, 0)}
-            p1Dims={new PartDimensions(0.015, 0.025, 0.015, 0)}
+            p0Dims={this.props.innerPart}
+            p1Dims={this.props.outerPart}
           ></PartVisual>
           <g>
             {this.props.elementalStressResults &&
@@ -139,6 +145,7 @@ class ModelVisual extends React.Component<
           </g>
 
           {this.state.shouldDisplayMesh &&
+            this.state.mesh.elements.length > 0 &&
             this.state.mesh.elements.map((element, i) => (
               <ElementOutline
                 element={element}
@@ -276,10 +283,11 @@ class ModelVisual extends React.Component<
    * Scales the SVG based on the data within it
    */
   rescale() {
+    this.calcMeshRange();
     const width =
       this.ref.current.clientWidth - this.state.scalingFactors.margin * 2;
     const height =
-      this.ref.current.clientWidth - this.state.scalingFactors.margin * 2;
+      this.ref.current.clientHeight - this.state.scalingFactors.margin * 2;
     const scalingFactor = {
       xScale: width / (this.state.scalingFactors.xRange[1] * 2),
       yScale:
@@ -302,29 +310,11 @@ class ModelVisual extends React.Component<
    * Computes range of nodes within the mesh and updates this.xRange and this.yRange appropriately
    */
   calcMeshRange() {
-    let minY = 0;
-    let maxX = this.state.mesh.nodes[0].x;
-    let minX = maxX;
-    let maxY = this.state.mesh.nodes[0].y;
-
-    for (let i = 0; i < this.state.mesh.nodes.length; i++) {
-      const x = this.state.mesh.nodes[i].x;
-      const y = this.state.mesh.nodes[i].y;
-
-      if (x < minX) {
-        minX = x;
-      } else if (x > maxX) {
-        maxX = x;
-      }
-
-      if (y < minY) {
-        minY = y;
-      } else if (y > maxY) {
-        maxY = y;
-      }
-    }
-    this.state.scalingFactors.xRange = [minX, maxX];
-    this.state.scalingFactors.yRange = [minY, maxY];
+    this.state.scalingFactors.xRange = [
+      0,
+      this.props.outerPart.outerDiameter / 2,
+    ];
+    this.state.scalingFactors.yRange = [0, this.props.outerPart.length];
   }
 }
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { PartSpecification } from "./PartSpecification";
 
 class PartVisual extends React.Component<
   {
@@ -14,8 +15,8 @@ class PartVisual extends React.Component<
       xRange: number[];
       yRange: number[];
     };
-    p0Dims: PartDimensions;
-    p1Dims: PartDimensions;
+    p0Dims: PartSpecification;
+    p1Dims: PartSpecification;
   }
 > {
   ARROW_PART_OFFSET = 12.5;
@@ -38,16 +39,21 @@ class PartVisual extends React.Component<
   }
 
   render() {
+    const p1Width =
+      ((this.state.p1Dims.outerDiameter - this.state.p1Dims.innerDiameter) *
+        this.state.scalingFactors.xScale) /
+      2;
     const p0X =
-      (this.state.p0Dims.internalDiameter +
+      (this.state.p0Dims.innerDiameter / 2 +
         this.state.scalingFactors.xRange[1]) *
         this.state.scalingFactors.xScale +
       this.state.scalingFactors.margin;
     const p0Width =
-      (this.state.p0Dims.outerDiameter - this.state.p0Dims.internalDiameter) *
-      this.state.scalingFactors.xScale;
+      ((this.state.p0Dims.outerDiameter - this.state.p0Dims.innerDiameter) *
+        this.state.scalingFactors.xScale) /
+      2;
     const p0XMirrored =
-      (-this.state.p0Dims.internalDiameter +
+      (-this.state.p0Dims.innerDiameter / 2 +
         this.state.scalingFactors.xRange[1]) *
         this.state.scalingFactors.xScale +
       this.state.scalingFactors.margin -
@@ -59,15 +65,13 @@ class PartVisual extends React.Component<
       this.state.p0Dims.length * this.state.scalingFactors.yScale;
 
     const p1X =
-      (this.state.p1Dims.internalDiameter +
+      (this.state.p1Dims.innerDiameter / 2 +
         this.state.scalingFactors.xRange[1]) *
         this.state.scalingFactors.xScale +
       this.state.scalingFactors.margin;
-    const p1Width =
-      (this.state.p1Dims.outerDiameter - this.state.p1Dims.internalDiameter) *
-      this.state.scalingFactors.xScale;
+
     const p1XMirrored =
-      (-this.state.p1Dims.internalDiameter +
+      (-this.state.p1Dims.innerDiameter / 2 +
         this.state.scalingFactors.xRange[1]) *
         this.state.scalingFactors.xScale +
       this.state.scalingFactors.margin -
@@ -116,7 +120,7 @@ class PartVisual extends React.Component<
           x1={p0X}
           y={p0ArrowStartY}
           x2={p0XMirrored + p0Width}
-          dimension={this.state.p0Dims.internalDiameter}
+          dimension={this.state.p0Dims.innerDiameter}
         />
         <RadialDimension
           x1={p0X + p0Width}
@@ -129,7 +133,7 @@ class PartVisual extends React.Component<
           x1={p1X}
           y={p1ArrowStartY}
           x2={p1XMirrored + p1Width}
-          dimension={this.state.p1Dims.internalDiameter}
+          dimension={this.state.p1Dims.innerDiameter}
         />
         <RadialDimension
           x1={p1X + p1Width}
@@ -173,9 +177,7 @@ class RadialDimension extends React.Component<
 
   getDimensionText() {
     return (
-      "⌀" +
-      (Math.round(this.state.dimension * 1000000) / 1000).toFixed(3) +
-      " mm"
+      "⌀" + (Math.round(this.state.dimension * 1000) / 1000).toFixed(3) + " mm"
     );
   }
 
@@ -218,22 +220,4 @@ class RadialDimension extends React.Component<
   }
 }
 
-class PartDimensions {
-  internalDiameter: number;
-  outerDiameter: number;
-  length: number;
-  xOffset: number;
-  constructor(
-    internalDiameter: number,
-    outerDiameter: number,
-    length: number,
-    xOffset: number
-  ) {
-    this.internalDiameter = internalDiameter;
-    this.outerDiameter = outerDiameter;
-    this.length = length;
-    this.xOffset = xOffset;
-  }
-}
-
-export { PartVisual, PartDimensions };
+export { PartVisual };

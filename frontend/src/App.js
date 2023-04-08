@@ -8,7 +8,7 @@ import { Mesh } from "./mesh";
 import $ from "jquery";
 import Cookies from "js-cookie";
 
-import React, { Component, ReactDOM } from "react";
+import React from "react";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -67,10 +67,16 @@ class App extends React.Component {
                   mesh={new Mesh(this.state.meshString)}
                   elementalStressResults={this.state.elementalStressResults}
                   nodalDisplacementResults={this.state.nodalDisplacementResults}
+                  innerPart={this.state.innerPart}
+                  outerPart={this.state.outerPart}
                 />
               )}
               {this.state.meshString.length == 0 && (
-                <ModelVisual mesh={new Mesh()} />
+                <ModelVisual
+                  mesh={new Mesh()}
+                  innerPart={this.state.innerPart}
+                  outerPart={this.state.outerPart}
+                />
               )}
             </Col>
             <Col>
