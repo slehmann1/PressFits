@@ -98,25 +98,26 @@ class Solution extends React.Component {
         {this.props.result.innerDeflection && (
           <div>
             <h4> Deflections </h4>
-            <h5> Inner Part </h5>
             <p>
               Deflection of inner wall:&nbsp;
-              {this.props.p0InnerDeflection} mm
+              {this.roundToNDecimals(
+                this.props.result.innerDeflection * 1000,
+                3
+              )}{" "}
+              μm
             </p>
             <p>
               Deflection of outer wall:&nbsp;
-              {this.props.p0OuterDeflection} mm
-            </p>
-
-            <h5> Outer Part </h5>
-            <p>
-              Deflection of inner wall:&nbsp;
-              {this.props.p1InnerDeflection} mm
+              {this.roundToNDecimals(
+                this.props.result.outerDeflection * 1000,
+                3
+              )}{" "}
+              μm
             </p>
 
             <p>
-              Deflection of outer wall:&nbsp;
-              {this.props.p1OuterDeflection} mm
+              Resulting interface diameter:&nbsp;
+              {this.roundToNDecimals(this.props.result.R * 2, 3)} mm
             </p>
           </div>
         )}

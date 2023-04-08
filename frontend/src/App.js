@@ -67,7 +67,6 @@ class App extends React.Component {
               }
               updateFrictionCoefficient={(frictionCoefficient) =>
                 this.setState((state) => {
-                  console.log("UPDATE");
                   state.frictionCoefficient = frictionCoefficient;
                   return state;
                 })
