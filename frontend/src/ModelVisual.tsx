@@ -31,7 +31,7 @@ class ModelVisual extends React.Component<
   }
 > {
   ref?: any;
-  MARGIN = 100;
+  MARGIN = 120;
 
   constructor(props: any) {
     super(props);

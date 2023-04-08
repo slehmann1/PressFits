@@ -35,20 +35,15 @@ export class Result {
   /**
    * Gets friction capacity of a press fit joint given a certain contact pressure. This is the axial force that can be taken.
    */
-  getFrictionCapacity(
-    frictionCoefficient: number,
-    contactPressure: number,
-    radius: number,
-    contactLength: number
-  ) {
-    return (
-      frictionCoefficient *
-      contactPressure *
+  calcFrictionCapacity() {
+    this.axialForceCapacity =
+      this.frictionCoefficient *
+      //@ts-ignore
+      this.contactPressure *
       2 *
       Math.PI *
-      radius *
-      contactLength
-    );
+      this.R *
+      this.contactLength;
   }
   /**
    *
@@ -67,21 +62,16 @@ export class Result {
   /**
    * Gets torque capacity of a press fit joint given a certain contact pressure
    */
-  getTorqueCapacity(
-    frictionCoefficient: number,
-    contactPressure: number,
-    radius: number,
-    contactLength: number
-  ) {
-    return (
-      frictionCoefficient *
-      contactPressure *
+  calcTorqueCapacity() {
+    this.torqueCapacity =
+      this.frictionCoefficient *
+      //@ts-ignore
+      this.contactPressure *
       2 *
       Math.PI *
-      radius *
-      contactLength *
-      radius
-    );
+      this.R *
+      this.contactLength *
+      this.R;
   }
   /**
    * Computes von mises equivalent stress for plane stress, where all shear stresses are 0

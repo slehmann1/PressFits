@@ -9,7 +9,7 @@ from pressfits.concentric_axisymmetric_mesh import ConcentricAxisymmetricMesh
 from pressfits.concentric_plane_stress_mesh import ConcentricPlaneStressMesh
 from pressfits.element import Element
 from pressfits.node import Node
-from pressfits.results import Displacement, Force, Result, Strain, Stress
+from pressfits.results import Contact, Displacement, Force, Result, Strain, Stress
 
 _ENTRY_LENGTH = 12
 _CMAP = "jet"
@@ -133,6 +133,11 @@ class PressFitModel:
                 return result.add_force(Force(*vals))
 
             skip_lines = 4
+        elif "CONTACT" in block[0]:
+
+            def act_on_results(result, vals):
+                return result.add_contact_pressure(Contact(*vals))
+
         else:
             raise ValueError(f"Unrecognized type_text: {block[0]}")
 
@@ -212,6 +217,9 @@ class PressFitModel:
             for node in self.nodes
         }
 
+    def get_x_nodal_forces_summary(self, key=101):
+        return {node.id: node.results[key].force.x for node in self.nodes}
+
     @staticmethod
     def mean_stress(element):
         vm_stresses = [stress.get_von_mises() for stress in element.results]
@@ -284,6 +292,20 @@ class PressFitModel:
         plt.set_cmap(_CMAP)
         plt.title("Von Mises Stress (MPA)")
         plt.show()
+
+    def max_contact_pressure(self, key=101):
+        """Gets the maximum normal contact pressure of the contacts within the model
+
+        Returns:
+            float: Maximum normal contact pressure (MPa)
+            key (int, optional): Step of simulation. Defaults to 101.
+        """
+        contact_pressure = 0
+        for node in self.nodes:
+            if node.results[key].contact.contact_pressure > contact_pressure:
+                contact_pressure = node.results[key].contact.contact_pressure
+
+        return contact_pressure * 1e-6
 
     def max_element_vm_stress(self, part_number=0):
         """Gets the maximum averaged elemental Von Mises stress within a part
@@ -372,7 +394,6 @@ class PlaneStressPressFitModel(PressFitModel):
 
 class AxisymmetricPressFitModel(PressFitModel):
     def __init__(self, id_0, id_1, od_0, od_1, len_0, len_1, offset, name, **kwargs):
-
         lines_per_part = kwargs.get("lines_per_part")
 
         mesh = ConcentricAxisymmetricMesh(

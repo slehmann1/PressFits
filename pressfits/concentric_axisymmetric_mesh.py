@@ -1,6 +1,7 @@
 import math
 
 import numpy as np
+
 from pressfits.concentric_mesh import ConcentricMesh
 from pressfits.curves import VerticalLine
 from pressfits.element import Element
@@ -97,7 +98,6 @@ class ConcentricAxisymmetricMesh(ConcentricMesh):
 
         lines = []
         if self.inflation_layers != 0:
-
             # Inflate both outside and inside layers
             ConcentricAxisymmetricMesh._add_lines_for_part(
                 lines,

@@ -9,10 +9,19 @@ class Displacement:
     z: float
 
     def get_total_displacement(self):
-
         return (self.x**2 + self.y**2 + self.z**2) ** 0.5 * (
             -1 if self.x < 0 else 1
         )
+
+
+@dataclass
+class Contact:
+    contact_clearance: float
+    contact_slip_1: float
+    contact_slip_2: float
+    contact_pressure: float
+    contact_shear_1: float
+    contact_shear_2: float
 
 
 @dataclass
@@ -90,6 +99,7 @@ class Result:
         self.stress = None
         self.strain = None
         self.force = None
+        self.contact = None
 
     def add_stress(self, stress):
         self.stress = stress
@@ -102,3 +112,6 @@ class Result:
 
     def add_force(self, force):
         self.force = force
+
+    def add_contact_pressure(self, contact):
+        self.contact = contact

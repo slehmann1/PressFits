@@ -251,7 +251,8 @@ class ConcentricMesh(ABC):
         string += "*STATIC\n"
 
         string += self.get_boundaries_inp()
-
+        string += "*CONTACT FILE\n"
+        string += "CSTR\n"
         string += "*EL FILE\n"
         string += "E,S\n"
         string += "*NODE FILE\n"

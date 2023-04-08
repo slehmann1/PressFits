@@ -5,6 +5,7 @@ import ModelVisual from "./ModelVisual.tsx";
 import { PartSpecification } from "./PartSpecification";
 import { InputBar } from "./InputBar.js";
 import { Mesh } from "./mesh";
+import { FiniteElementResult } from "./FiniteElementResult";
 import $ from "jquery";
 import Cookies from "js-cookie";
 
@@ -28,9 +29,15 @@ class App extends React.Component {
       JSON.parse(window.localStorage.getItem("OuterPart")) ||
       new PartSpecification(0, 0, 0, 0, 0, 0, 0, 0);
     this.state = {
-      meshString: "",
-      nodalResultsString: "",
-      elementalResultsString: "",
+      feResult: new FiniteElementResult(
+        innerPart,
+        outerPart,
+        this.DEFAULT_FRICTION_COEFFICIENT,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      ),
       innerPart: innerPart,
 
       outerPart: outerPart,
@@ -70,9 +77,13 @@ class App extends React.Component {
           <Row style={{ marginTop: "10px" }}>
             <Col>
               <ModelVisual
-                mesh={new Mesh(this.state.meshString)}
-                elementalStressResults={this.state.elementalStressResults}
-                nodalDisplacementResults={this.state.nodalDisplacementResults}
+                mesh={this.state.feResult.mesh}
+                elementalStressResults={
+                  this.state.feResult.elementalStressResults
+                }
+                nodalDisplacementResults={
+                  this.state.feResult.nodalDisplacementResults
+                }
                 innerPart={this.state.innerPart}
                 outerPart={this.state.outerPart}
               />
@@ -80,7 +91,7 @@ class App extends React.Component {
             <Col>
               <ResultsPane
                 analyticalResult={this.state.analyticalResult}
-                finiteElementResult={this.state.analyticalResult}
+                finiteElementResult={this.state.feResult}
               />
             </Col>
           </Row>
@@ -152,9 +163,15 @@ class App extends React.Component {
         console.log("Calculation completed successfully");
         console.log(data);
         self.setState({
-          meshString: data.mesh_string,
-          nodalDisplacementResults: data.nodal_displacements,
-          elementalStressResults: data.elemental_stresses,
+          feResult: new FiniteElementResult(
+            inputs.innerPart,
+            inputs.outerPart,
+            inputs.frictionCoefficient,
+            data.mesh_string,
+            data.elemental_stresses,
+            data.nodal_displacements,
+            data.contact_pressure
+          ),
         });
       },
     });

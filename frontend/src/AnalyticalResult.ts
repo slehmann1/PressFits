@@ -101,19 +101,8 @@ export class AnalyticalResult extends Result {
       minOuterRadialStress
     );
 
-    this.torqueCapacity = this.getTorqueCapacity(
-      this.frictionCoefficient,
-      this.contactPressure,
-      this.R,
-      this.contactLength
-    );
-    this.axialForceCapacity =
-      this.frictionCoefficient *
-      this.contactPressure *
-      2 *
-      Math.PI *
-      this.R *
-      this.contactLength;
+    this.calcTorqueCapacity();
+    this.calcFrictionCapacity();
   }
 
   /**
