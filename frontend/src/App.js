@@ -1,5 +1,5 @@
 import "./App.css";
-import { Results } from "./ResultsPane.js";
+import { ResultsPane } from "./ResultsPane.js";
 import Explanation from "./Explanation.js";
 import ModelVisual from "./ModelVisual.tsx";
 import { PartSpecification } from "./PartSpecification";
@@ -18,21 +18,28 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { AnalyticalResult } from "./AnalyticalResult";
 
 class App extends React.Component {
+  DEFAULT_FRICTION_COEFFICIENT = 0.2;
   constructor(props) {
     super(props);
+    let innerPart =
+      JSON.parse(window.localStorage.getItem("InnerPart")) ||
+      new PartSpecification(0, 0, 0, 0, 0, 0, 0, 0);
+    let outerPart =
+      JSON.parse(window.localStorage.getItem("OuterPart")) ||
+      new PartSpecification(0, 0, 0, 0, 0, 0, 0, 0);
     this.state = {
       meshString: "",
       nodalResultsString: "",
       elementalResultsString: "",
-      innerPart:
-        JSON.parse(window.localStorage.getItem("InnerPart")) ||
-        new PartSpecification(0, 0, 0, 0, 0, 0, 0, 0),
+      innerPart: innerPart,
 
-      outerPart:
-        JSON.parse(window.localStorage.getItem("OuterPart")) ||
-        new PartSpecification(0, 0, 0, 0, 0, 0, 0, 0),
-
-      frictionCoefficient: 0.2,
+      outerPart: outerPart,
+      frictionCoefficient: this.DEFAULT_FRICTION_COEFFICIENT,
+      analyticalResult: new AnalyticalResult(
+        innerPart,
+        outerPart,
+        this.DEFAULT_FRICTION_COEFFICIENT
+      ),
     };
     this.updatePartSpecification = this.updatePartSpecification.bind(this);
     this.setState = this.setState.bind(this);
@@ -62,25 +69,19 @@ class App extends React.Component {
           </Row>
           <Row style={{ marginTop: "10px" }}>
             <Col>
-              {this.state.meshString.length > 0 && (
-                <ModelVisual
-                  mesh={new Mesh(this.state.meshString)}
-                  elementalStressResults={this.state.elementalStressResults}
-                  nodalDisplacementResults={this.state.nodalDisplacementResults}
-                  innerPart={this.state.innerPart}
-                  outerPart={this.state.outerPart}
-                />
-              )}
-              {this.state.meshString.length == 0 && (
-                <ModelVisual
-                  mesh={new Mesh()}
-                  innerPart={this.state.innerPart}
-                  outerPart={this.state.outerPart}
-                />
-              )}
+              <ModelVisual
+                mesh={new Mesh(this.state.meshString)}
+                elementalStressResults={this.state.elementalStressResults}
+                nodalDisplacementResults={this.state.nodalDisplacementResults}
+                innerPart={this.state.innerPart}
+                outerPart={this.state.outerPart}
+              />
             </Col>
             <Col>
-              <Results analyticalResult={this.state.analyticalResult} />
+              <ResultsPane
+                analyticalResult={this.state.analyticalResult}
+                finiteElementResult={this.state.analyticalResult}
+              />
             </Col>
           </Row>
           <Row style={{ marginTop: "50px" }}>

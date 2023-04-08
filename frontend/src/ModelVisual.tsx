@@ -31,6 +31,7 @@ class ModelVisual extends React.Component<
   }
 > {
   ref?: any;
+  MARGIN = 100;
 
   constructor(props: any) {
     super(props);
@@ -39,7 +40,7 @@ class ModelVisual extends React.Component<
       scalingFactors: {
         xScale: 1,
         yScale: 1,
-        margin: 30,
+        margin: this.MARGIN,
         xRange: [0, 1],
         yRange: [0, 1],
       },
@@ -116,11 +117,8 @@ class ModelVisual extends React.Component<
       new Colour(255, 0, 0),
     ];
     return (
-      <div style={{ height: "100%", width: "100%", border: "1px solid red" }}>
-        <svg
-          ref={this.ref}
-          style={{ height: "100%", width: "100%", border: "1px solid red" }}
-        >
+      <div style={{ height: "100%", width: "100%" }}>
+        <svg ref={this.ref} style={{ height: "100%", width: "100%" }}>
           <PartVisual
             scalingFactors={this.state.scalingFactors}
             p0Dims={this.props.innerPart}

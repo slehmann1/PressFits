@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-class Results extends React.Component {
+class ResultsPane extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -14,7 +14,7 @@ class Results extends React.Component {
       <Container>
         <Row>
           <Col>
-            <FiniteElementSolution />
+            <FiniteElementSolution result={this.props.finiteElementResult} />
           </Col>
           <Col>
             <AnalyticalSolution result={this.props.analyticalResult} />
@@ -31,9 +31,6 @@ class Solution extends React.Component {
     super(props);
   }
   render() {
-    if (!this.props.result) {
-      return <div></div>;
-    }
     return (
       <div className="Solution">
         <h3> {this.props.title}</h3>
@@ -172,4 +169,4 @@ FiniteElementSolution.defaultProps = {
   title: "Finite Element Solution",
 };
 
-export { AnalyticalSolution, FiniteElementSolution, Results };
+export { AnalyticalSolution, FiniteElementSolution, ResultsPane };
