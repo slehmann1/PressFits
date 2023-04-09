@@ -2,8 +2,6 @@
 # Mechanical Press-Fit Analysis Web App
 Full-stack web application capable of analyzing press-fit designs with both a finite element method and an analytical approach. 
 
-### Feature Demonstration
-
 ![UI Overview](https://raw.githubusercontent.com/slehmann1/PressFits/master/SupportingInfo/Interface.PNG)
 #### Finite Element Method
 Parts can be modelled in one of two ways:
