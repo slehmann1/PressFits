@@ -15,12 +15,13 @@ export class FiniteElementResult extends Result {
     innerPart: PartSpecification,
     outerPart: PartSpecification,
     frictionCoefficient: number,
+    length: number,
     meshString: string,
     elementalStressResults: Object,
     nodalDisplacementResults: Object,
     contactPressure: number
   ) {
-    super(innerPart, outerPart, frictionCoefficient);
+    super(innerPart, outerPart, frictionCoefficient, length);
     this.elementalStressResults = elementalStressResults;
     this.nodalDisplacementResults = nodalDisplacementResults;
     this.mesh = new Mesh(meshString);

@@ -1,4 +1,5 @@
 import React from "react";
+import parse from "html-react-parser";
 
 export class InputGroup extends React.Component {
   constructor(props) {
@@ -6,9 +7,13 @@ export class InputGroup extends React.Component {
   }
 
   render() {
+    let className = this.props.wide
+      ? "input-group-text input-group-text-w"
+      : "input-group-text";
+
     return (
       <div className="input-group">
-        <div className="input-group-text">{this.props.text}</div>
+        <div className={className}>{parse(this.props.text)}</div>
         <input
           className="form-control"
           type="number"

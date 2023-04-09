@@ -20,7 +20,8 @@ export class Result {
   constructor(
     innerPart: PartSpecification,
     outerPart: PartSpecification,
-    frictionCoefficient: number
+    frictionCoefficient: number,
+    length: number
   ) {
     this.innerPart = innerPart;
     this.outerPart = outerPart;
@@ -28,8 +29,7 @@ export class Result {
     this.radialInterference =
       (innerPart.outerDiameter - outerPart.innerDiameter) / 2;
     this.R = (innerPart.outerDiameter + outerPart.innerDiameter) / 4; // Nominal radius
-    this.contactLength =
-      Math.min(innerPart.length, outerPart.length) - outerPart.xOffset;
+    this.contactLength = length;
     this.frictionCoefficient = frictionCoefficient;
   }
   /**
@@ -50,14 +50,18 @@ export class Result {
    * @returns Temperature differential required for assembly if cooling the inner part
    */
   getInnerTempDifferential() {
-    return (2 * this.radialInterference) / (2 * this.R * this.innerPart.CTE);
+    return (
+      (2 * this.radialInterference) / (2 * this.R * this.innerPart.CTE * 1e-6)
+    );
   }
   /**
    *
    * @returns Temperature differential required for assembly if heating the outer part
    */
   getOuterTempDifferential() {
-    return (2 * this.radialInterference) / (2 * this.R * this.outerPart.CTE);
+    return (
+      (2 * this.radialInterference) / (2 * this.R * this.outerPart.CTE * 1e-6)
+    );
   }
   /**
    * Gets torque capacity of a press fit joint given a certain contact pressure

@@ -15,6 +15,7 @@ class ModelVisual extends React.Component<
     nodalDisplacementResults: Object;
     innerPart: PartSpecification;
     outerPart: PartSpecification;
+    length: number;
   },
   {
     mesh: Mesh;
@@ -109,6 +110,7 @@ class ModelVisual extends React.Component<
     }
 
     this.calcMeshRange();
+    this.rescale();
     let colours = [
       new Colour(0, 0, 255),
       new Colour(0, 255, 255),
@@ -123,6 +125,7 @@ class ModelVisual extends React.Component<
             scalingFactors={this.state.scalingFactors}
             p0Dims={this.props.innerPart}
             p1Dims={this.props.outerPart}
+            length={this.props.length}
           ></PartVisual>
           <g>
             {this.props.elementalStressResults &&
@@ -169,6 +172,7 @@ class ModelVisual extends React.Component<
                 }
                 width={15}
                 units="MPa"
+                decimalPlaces={1}
               />
             )}
           {this.props.nodalDisplacementResults &&
@@ -189,6 +193,7 @@ class ModelVisual extends React.Component<
                 }
                 width={15}
                 units="μm"
+                decimalPlaces={3}
               />
             )}
           {this.props.nodalDisplacementResults &&
@@ -281,6 +286,10 @@ class ModelVisual extends React.Component<
    * Scales the SVG based on the data within it
    */
   rescale() {
+    if (this.ref.current == null) {
+      console.log("NULL");
+      return;
+    }
     this.calcMeshRange();
     const width =
       this.ref.current.clientWidth - this.state.scalingFactors.margin * 2;
@@ -296,11 +305,16 @@ class ModelVisual extends React.Component<
       xRange: this.state.scalingFactors.xRange,
       yRange: this.state.scalingFactors.yRange,
     };
-    this.setState({
-      scalingFactors: scalingFactor,
-    });
-    for (let i = 0; i < this.state.mesh.nodes.length; i++) {
-      this.state.mesh.nodes[i].setScalingFactor(scalingFactor);
+    if (
+      this.state.scalingFactors.xScale != scalingFactor.xScale ||
+      this.state.scalingFactors.yScale != scalingFactor.yScale
+    ) {
+      this.setState({
+        scalingFactors: scalingFactor,
+      });
+      for (let i = 0; i < this.state.mesh.nodes.length; i++) {
+        this.state.mesh.nodes[i].setScalingFactor(scalingFactor);
+      }
     }
   }
 
@@ -312,7 +326,7 @@ class ModelVisual extends React.Component<
       0,
       this.props.outerPart.outerDiameter / 2,
     ];
-    this.state.scalingFactors.yRange = [0, this.props.outerPart.length];
+    this.state.scalingFactors.yRange = [0, this.props.length];
   }
 }
 

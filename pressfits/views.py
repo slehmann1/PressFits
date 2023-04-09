@@ -25,33 +25,31 @@ class PressView(REST_Views.APIView):
         # Process post data
         p_0_material = self.get_material(request, "innerPart")
         p_1_material = self.get_material(request, "outerPart")
-        [p_0_id, p_0_od, p_0_length] = self.get_part_parameters(request, "innerPart")
-        [p_1_id, p_1_od, p_1_length] = self.get_part_parameters(request, "outerPart")
-        x_offset = float(request.data["outerPart"]["xOffset"])
+        length = request.data["contactLength"] / 1000
+        [p_0_id, p_0_od] = self.get_part_parameters(request, "innerPart")
+        [p_1_id, p_1_od] = self.get_part_parameters(request, "outerPart")
 
         if not self.inputs_are_valid(
             p_0_material,
             p_1_material,
-            [p_0_id, p_0_od, p_0_length],
-            [p_1_id, p_1_od, p_1_length],
-            x_offset,
+            [p_0_id, p_0_od],
+            [p_1_id, p_1_od],
         ):
             response = exception_handler(exceptions.APIException(), None)
             response.data["status_code"] = 400
             response.data["detail"] = "Invalid Inputs"
             return response
-
         model = AxisymmetricPressFitModel(
             p_0_id,
             p_1_id,
             p_0_od,
             p_1_od,
-            p_0_length,
-            p_1_length,
-            x_offset,
+            length,
+            length,
             "Press_Fit",
         )
         model.run_model(p_0_material, p_1_material)
+
         model.read_element_results()
         model.read_nodal_results()
         model_data = {
@@ -65,7 +63,7 @@ class PressView(REST_Views.APIView):
         return Response(results)
 
     @staticmethod
-    def inputs_are_valid(p_0_material, p_1_material, p_0_dims, p_1_dims, x_offset):
+    def inputs_are_valid(p_0_material, p_1_material, p_0_dims, p_1_dims):
         # Check materials are valid
         if not PressView.is_positive_numbers(
             (
@@ -97,13 +95,6 @@ class PressView(REST_Views.APIView):
 
         # Check intersection:
         if p_0_dims[1] < p_1_dims[0]:
-            return False
-
-        if not isinstance(x_offset, float) and not isinstance(x_offset, int):
-            return False
-
-        # Check parts intersect axially
-        if not x_offset < p_0_dims[2]:
             return False
 
         return True
@@ -154,12 +145,11 @@ class PressView(REST_Views.APIView):
             part_prefix (String): Prefix used for parameters. Eg. p_0_
 
         Returns:
-            tuple: Inner Diameter, Outer Diameter, Length, x_offset
+            tuple: Inner Diameter, Outer Diameter, Length
         """
 
         # Convert from mm diameter to m radius
         return (
             float(request.data[part_prefix]["innerDiameter"]) / 1000,
             float(request.data[part_prefix]["outerDiameter"]) / 1000,
-            float(request.data[part_prefix]["length"]) / 1000,
         )

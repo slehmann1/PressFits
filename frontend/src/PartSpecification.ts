@@ -1,8 +1,6 @@
 export class PartSpecification {
   innerDiameter: number;
   outerDiameter: number;
-  length: number;
-  xOffset: number;
   youngsModulus: number;
   poissonsRatio: number;
   CTE: number;
@@ -12,8 +10,6 @@ export class PartSpecification {
   constructor(
     innerDiameter: number,
     outerDiameter: number,
-    length: number,
-    xOffset: number,
     youngsModulus: number,
     poissonsRatio: number,
     CTE: number,
@@ -21,8 +17,6 @@ export class PartSpecification {
   ) {
     this.innerDiameter = Number(innerDiameter);
     this.outerDiameter = Number(outerDiameter);
-    this.length = Number(length);
-    this.xOffset = Number(xOffset);
     this.youngsModulus = Number(youngsModulus);
     this.poissonsRatio = Number(poissonsRatio);
     this.CTE = Number(CTE);
@@ -37,8 +31,6 @@ export class PartSpecification {
     return new PartSpecification(
       partSpec.innerDiameter * growthRate,
       partSpec.outerDiameter * growthRate,
-      partSpec.length * growthRate,
-      partSpec.xOffset,
       partSpec.youngsModulus,
       partSpec.poissonsRatio,
       partSpec.CTE,

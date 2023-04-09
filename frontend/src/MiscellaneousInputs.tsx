@@ -4,12 +4,21 @@ import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import { InputGroup } from "./InputGroup";
 
-export class MiscellaneousInputs extends React.Component {
-  constructor(props) {
+export class MiscellaneousInputs extends React.Component<
+  {
+    frictionCoefficient: number;
+    length: number;
+    lengthCallback: (value: number) => void;
+    frictionCallback: (value: number) => void;
+  },
+  {}
+> {
+  constructor(props: any) {
     super(props);
   }
 
   render() {
+    console.log("Passed: " + this.props.length);
     return (
       <div className="input-block">
         <Container>
@@ -19,11 +28,20 @@ export class MiscellaneousInputs extends React.Component {
               <InputGroup
                 text="Coefficient Of Friction"
                 value={this.props.frictionCoefficient}
-                changeCallback={(value) => this.props.callback(value)}
+                changeCallback={(value: number) =>
+                  this.props.frictionCallback(value)
+                }
               />
             </Col>
-            <Col></Col>
-            <Col></Col>
+            <Col>
+              <InputGroup
+                text={"Length\n(mm)"}
+                changeCallback={(value: number) =>
+                  this.props.lengthCallback(value)
+                }
+                value={this.props.length}
+              />
+            </Col>
             <Col>
               <button className="btn"> Calculate </button>
             </Col>

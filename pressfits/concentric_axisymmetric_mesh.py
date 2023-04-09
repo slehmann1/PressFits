@@ -20,7 +20,7 @@ class ConcentricAxisymmetricMesh(ConcentricMesh):
         od_1,
         len_0,
         len_1,
-        offset_1,
+        offset_1=0,
         lines_per_part=_LINES_PER_PART,
     ):
         """Create a mesh for two tubes pressed over each other using an axisymmetric assumption

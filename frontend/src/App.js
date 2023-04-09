@@ -4,7 +4,6 @@ import Explanation from "./Explanation.tsx";
 import ModelVisual from "./ModelVisual.tsx";
 import { PartSpecification } from "./PartSpecification";
 import { InputBar } from "./InputBar.tsx";
-import { Mesh } from "./mesh";
 import { FiniteElementResult } from "./FiniteElementResult";
 import $ from "jquery";
 import Cookies from "js-cookie";
@@ -20,32 +19,35 @@ import { AnalyticalResult } from "./AnalyticalResult";
 
 class App extends React.Component {
   DEFAULT_FRICTION_COEFFICIENT = 0.2;
+  DEFAULT_LENGTH = 15;
   constructor(props) {
     super(props);
     let innerPart =
       JSON.parse(window.localStorage.getItem("InnerPart")) ||
-      new PartSpecification(0, 0, 0, 0, 0, 0, 0, 0);
+      new PartSpecification(10, 15.05, 200, 0.3, 20, 210, 12.2);
     let outerPart =
       JSON.parse(window.localStorage.getItem("OuterPart")) ||
-      new PartSpecification(0, 0, 0, 0, 0, 0, 0, 0);
+      new PartSpecification(15, 30, 200, 0.3, 20, 210, 12.2);
     this.state = {
       feResult: new FiniteElementResult(
         innerPart,
         outerPart,
         this.DEFAULT_FRICTION_COEFFICIENT,
+        this.DEFAULT_LENGTH,
         undefined,
         undefined,
         undefined,
         undefined
       ),
       innerPart: innerPart,
-
       outerPart: outerPart,
       frictionCoefficient: this.DEFAULT_FRICTION_COEFFICIENT,
+      contactLength: this.DEFAULT_LENGTH,
       analyticalResult: new AnalyticalResult(
         innerPart,
         outerPart,
-        this.DEFAULT_FRICTION_COEFFICIENT
+        this.DEFAULT_FRICTION_COEFFICIENT,
+        this.DEFAULT_LENGTH
       ),
     };
     this.updatePartSpecification = this.updatePartSpecification.bind(this);
@@ -61,14 +63,19 @@ class App extends React.Component {
               innerPart={this.state.innerPart}
               outerPart={this.state.outerPart}
               frictionCoefficient={this.state.frictionCoefficient}
+              length={this.state.contactLength}
               updatePartSpecification={this.updatePartSpecification}
               calculateCallback={(frictionCoefficient) =>
                 this.calculate(frictionCoefficient)
               }
               updateFrictionCoefficient={(frictionCoefficient) =>
-                this.setState((state) => {
-                  state.frictionCoefficient = frictionCoefficient;
-                  return state;
+                this.setState({
+                  frictionCoefficient: frictionCoefficient,
+                })
+              }
+              updateLength={(contactLength) =>
+                this.setState({
+                  contactLength: contactLength,
                 })
               }
             />
@@ -85,6 +92,7 @@ class App extends React.Component {
                 }
                 innerPart={this.state.innerPart}
                 outerPart={this.state.outerPart}
+                length={this.state.contactLength}
               />
             </Col>
             <Col style={{ marginLeft: "-120px" }}>
@@ -134,7 +142,8 @@ class App extends React.Component {
       analyticalResult: new AnalyticalResult(
         this.state.innerPart,
         this.state.outerPart,
-        this.state.frictionCoefficient
+        this.state.frictionCoefficient,
+        this.state.contactLength
       ),
     });
   }
@@ -142,6 +151,7 @@ class App extends React.Component {
   calculate() {
     let inputs = {
       frictionCoefficient: this.state.frictionCoefficient,
+      contactLength: this.state.contactLength,
       innerPart: this.state.innerPart,
       outerPart: this.state.outerPart,
     };
@@ -166,6 +176,7 @@ class App extends React.Component {
             inputs.innerPart,
             inputs.outerPart,
             inputs.frictionCoefficient,
+            inputs.contactLength,
             data.mesh_string,
             data.elemental_stresses,
             data.nodal_displacements,

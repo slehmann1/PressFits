@@ -9,7 +9,8 @@ from pressfits.concentric_axisymmetric_mesh import ConcentricAxisymmetricMesh
 from pressfits.concentric_plane_stress_mesh import ConcentricPlaneStressMesh
 from pressfits.element import Element
 from pressfits.node import Node
-from pressfits.results import Contact, Displacement, Force, Result, Strain, Stress
+from pressfits.results import (Contact, Displacement, Force, Result, Strain,
+                               Stress)
 
 _ENTRY_LENGTH = 12
 _CMAP = "jet"
@@ -393,10 +394,10 @@ class PlaneStressPressFitModel(PressFitModel):
 
 
 class AxisymmetricPressFitModel(PressFitModel):
-    def __init__(self, id_0, id_1, od_0, od_1, len_0, len_1, offset, name, **kwargs):
+    def __init__(self, id_0, id_1, od_0, od_1, len_0, len_1, name, **kwargs):
         lines_per_part = kwargs.get("lines_per_part")
 
         mesh = ConcentricAxisymmetricMesh(
-            id_0, id_1, od_0, od_1, len_0, len_1, offset, lines_per_part
+            id_0, id_1, od_0, od_1, len_0, len_1, lines_per_part=lines_per_part
         )
         super().__init__(mesh, name)

@@ -5,9 +5,10 @@ export class AnalyticalResult extends Result {
   constructor(
     innerPart: PartSpecification,
     outerPart: PartSpecification,
-    frictionCoefficient: number
+    frictionCoefficient: number,
+    length: number
   ) {
-    super(innerPart, outerPart, frictionCoefficient);
+    super(innerPart, outerPart, frictionCoefficient, length);
     // TODO: Eliminate, pass growth corrected parts
     innerPart = PartSpecification.correctForGrowthRate(innerPart);
     outerPart = PartSpecification.correctForGrowthRate(outerPart);

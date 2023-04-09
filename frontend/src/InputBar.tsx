@@ -12,6 +12,7 @@ class InputBar extends React.Component<
     innerPart: PartSpecification;
     outerPart: PartSpecification;
     frictionCoefficient: number;
+    length: number;
     updatePartSpecification: (
       isInner: boolean,
       value: number,
@@ -19,6 +20,7 @@ class InputBar extends React.Component<
     ) => null;
     calculateCallback: () => null;
     updateFrictionCoefficient: (value: number) => null;
+    updateLength: (value: number) => null;
   },
   {}
 > {
@@ -65,9 +67,13 @@ class InputBar extends React.Component<
           </Row>
           <Row>
             <MiscellaneousInputs
-              callback={(value: number) => {
+              frictionCallback={(value: number) => {
                 this.props.updateFrictionCoefficient(value);
               }}
+              lengthCallback={(value: number) => {
+                this.props.updateLength(value);
+              }}
+              length={this.props.length}
               frictionCoefficient={this.props.frictionCoefficient}
             />
           </Row>
@@ -81,7 +87,7 @@ class InputBar extends React.Component<
     return true;
   }
 
-  submitForm(e) {
+  submitForm(e: any) {
     e.preventDefault();
     if (!this.inputIsValid()) {
       alert("Invalid Data Entry");

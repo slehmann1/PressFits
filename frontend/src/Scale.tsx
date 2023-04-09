@@ -11,6 +11,7 @@ class Scale extends React.Component<
     height: number;
     width: number;
     units: string;
+    decimalPlaces: number;
   },
   {
     minValue: number;
@@ -113,7 +114,7 @@ class Scale extends React.Component<
             (this.NUM_VALUES - 1)) *
             i +
             this.state.minValue,
-          3
+          this.props.decimalPlaces
         ) +
           " " +
           this.state.units

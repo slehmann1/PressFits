@@ -50,11 +50,15 @@
   white-space: pre-line !important;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
-  width: 10em;
+  width: 12em;
   height: 100%;
   display: "flex";
   justify-content: right;
   align-items: center;
+}
+
+.input-group-text-w {
+  width: 20em !important;
 }
 
 .input-group {
@@ -74,6 +78,7 @@
   border-color: #010911 !important;
   color: #f9f7f7 !important;
   border-radius: 3px !important;
+  font-size: larger !important;
 }
 
 p {

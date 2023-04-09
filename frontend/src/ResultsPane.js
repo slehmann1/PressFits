@@ -32,7 +32,6 @@ class Solution extends React.Component {
     super(props);
   }
   render() {
-    console.log(typeof this.props.result);
     return (
       <div className="Solution">
         <h3> {this.props.title}</h3>
@@ -45,7 +44,7 @@ class Solution extends React.Component {
           MPa
         </p>
         <p>
-          Axial force capacity at interface:&nbsp;
+          Interface axial force capacity:&nbsp;
           {this.roundToNDecimals(
             this.props.result.axialForceCapacity,
             this.DECIMAL_PLACES
@@ -53,7 +52,7 @@ class Solution extends React.Component {
           N
         </p>
         <p>
-          Torque capacity at interface:&nbsp;
+          Interface torque capacity:&nbsp;
           {this.roundToNDecimals(
             this.props.result.torqueCapacity / 1000,
             this.DECIMAL_PLACES
@@ -132,7 +131,7 @@ class Solution extends React.Component {
         <p>
           Temperature differential required when heating outer part:&nbsp;
           {this.roundToNDecimals(
-            this.props.result.getOuterTempDifferential() + 20,
+            this.props.result.getOuterTempDifferential(),
             this.DECIMAL_PLACES
           )}{" "}
           °C
@@ -140,7 +139,7 @@ class Solution extends React.Component {
         <p>
           Temperature differential required when cooling inner part:&nbsp;
           {this.roundToNDecimals(
-            this.props.result.getInnerTempDifferential() + 20,
+            this.props.result.getInnerTempDifferential(),
             this.DECIMAL_PLACES
           )}{" "}
           °C
