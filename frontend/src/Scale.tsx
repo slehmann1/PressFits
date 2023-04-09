@@ -24,16 +24,7 @@ class Scale extends React.Component<
     units: string;
   }
 > {
-  constructor(props: {
-    minValue: number;
-    maxValue: number;
-    colours: Colour[];
-    x: number;
-    y: number;
-    height: number;
-    width: number;
-    units: string;
-  }) {
+  constructor(props: any) {
     super(props);
     this.state = {
       minValue: props.minValue,

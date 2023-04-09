@@ -9,9 +9,6 @@ export class AnalyticalResult extends Result {
     length: number
   ) {
     super(innerPart, outerPart, frictionCoefficient, length);
-    // TODO: Eliminate, pass growth corrected parts
-    innerPart = PartSpecification.correctForGrowthRate(innerPart);
-    outerPart = PartSpecification.correctForGrowthRate(outerPart);
     this.calculateStressesDisplacements(innerPart, outerPart);
     this.updateCapacities();
   }

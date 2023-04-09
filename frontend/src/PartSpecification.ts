@@ -27,7 +27,8 @@ export class PartSpecification {
     let growthRate =
       1 +
       (partSpec.temperature - PartSpecification.REFERENCE_TEMPERATURE) *
-        partSpec.CTE;
+        partSpec.CTE *
+        1e-6;
     return new PartSpecification(
       partSpec.innerDiameter * growthRate,
       partSpec.outerDiameter * growthRate,

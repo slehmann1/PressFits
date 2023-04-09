@@ -44,8 +44,8 @@ class App extends React.Component {
       frictionCoefficient: this.DEFAULT_FRICTION_COEFFICIENT,
       contactLength: this.DEFAULT_LENGTH,
       analyticalResult: new AnalyticalResult(
-        innerPart,
-        outerPart,
+        PartSpecification.correctForGrowthRate(innerPart),
+        PartSpecification.correctForGrowthRate(outerPart),
         this.DEFAULT_FRICTION_COEFFICIENT,
         this.DEFAULT_LENGTH
       ),
@@ -72,8 +72,12 @@ class App extends React.Component {
                 this.setState({
                   frictionCoefficient: frictionCoefficient,
                   analyticalResult: this.state.analyticalResult.update(
-                    this.state.innerPart,
-                    this.state.outerPart,
+                    PartSpecification.correctForGrowthRate(
+                      this.state.innerPart
+                    ),
+                    PartSpecification.correctForGrowthRate(
+                      this.state.outerPart
+                    ),
                     frictionCoefficient,
                     this.state.contactLength
                   ),
@@ -83,8 +87,12 @@ class App extends React.Component {
                 this.setState({
                   contactLength: contactLength,
                   analyticalResult: this.state.analyticalResult.update(
-                    this.state.innerPart,
-                    this.state.outerPart,
+                    PartSpecification.correctForGrowthRate(
+                      this.state.innerPart
+                    ),
+                    PartSpecification.correctForGrowthRate(
+                      this.state.outerPart
+                    ),
                     this.state.frictionCoefficient,
                     contactLength
                   ),
@@ -149,8 +157,8 @@ class App extends React.Component {
     }
     this.setState({
       analyticalResult: new AnalyticalResult(
-        innerPart,
-        outerPart,
+        PartSpecification.correctForGrowthRate(innerPart),
+        PartSpecification.correctForGrowthRate(outerPart),
         this.state.frictionCoefficient,
         this.state.contactLength
       ),
@@ -163,8 +171,8 @@ class App extends React.Component {
     let inputs = {
       frictionCoefficient: this.state.frictionCoefficient,
       contactLength: this.state.contactLength,
-      innerPart: this.state.innerPart,
-      outerPart: this.state.outerPart,
+      innerPart: PartSpecification.correctForGrowthRate(this.state.innerPart),
+      outerPart: PartSpecification.correctForGrowthRate(this.state.outerPart),
     };
     console.log("Calculate:");
     let self = this;

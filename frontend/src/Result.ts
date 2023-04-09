@@ -7,10 +7,11 @@ export class Result {
   minOuterVMStress: number | undefined;
   axialForceCapacity: number | undefined;
   torqueCapacity: number | undefined;
+  //@ts-ignore
   radialInterference: number;
   innerPart: PartSpecification;
   outerPart: PartSpecification;
-
+  //@ts-ignore
   R: number;
   contactLength: number;
 
