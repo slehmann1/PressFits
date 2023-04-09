@@ -71,11 +71,23 @@ class App extends React.Component {
               updateFrictionCoefficient={(frictionCoefficient) =>
                 this.setState({
                   frictionCoefficient: frictionCoefficient,
+                  analyticalResult: this.state.analyticalResult.update(
+                    this.state.innerPart,
+                    this.state.outerPart,
+                    frictionCoefficient,
+                    this.state.contactLength
+                  ),
                 })
               }
               updateLength={(contactLength) =>
                 this.setState({
                   contactLength: contactLength,
+                  analyticalResult: this.state.analyticalResult.update(
+                    this.state.innerPart,
+                    this.state.outerPart,
+                    this.state.frictionCoefficient,
+                    contactLength
+                  ),
                 })
               }
             />
@@ -127,24 +139,23 @@ class App extends React.Component {
   }
 
   updatePartSpecification(isInner, value, valueName) {
+    let innerPart = this.state.innerPart;
+    let outerPart = this.state.outerPart;
+
     if (isInner) {
-      this.setState((state) => {
-        state.innerPart[valueName] = value;
-        return state.innerPart;
-      });
+      innerPart[valueName] = value;
     } else {
-      this.setState((state) => {
-        state.outerPart[valueName] = value;
-        return state.outerPart;
-      });
+      outerPart[valueName] = value;
     }
     this.setState({
       analyticalResult: new AnalyticalResult(
-        this.state.innerPart,
-        this.state.outerPart,
+        innerPart,
+        outerPart,
         this.state.frictionCoefficient,
         this.state.contactLength
       ),
+      innerPart: innerPart,
+      outerPart: outerPart,
     });
   }
 

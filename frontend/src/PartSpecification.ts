@@ -37,4 +37,18 @@ export class PartSpecification {
       partSpec.temperature
     );
   }
+
+  static equals(spec1: PartSpecification, spec2: PartSpecification) {
+    if (
+      spec1.innerDiameter === spec2.innerDiameter &&
+      spec1.outerDiameter === spec2.outerDiameter &&
+      spec1.youngsModulus === spec2.youngsModulus &&
+      spec1.poissonsRatio === spec2.youngsModulus &&
+      spec1.CTE === spec2.CTE &&
+      spec1.temperature === spec2.temperature
+    ) {
+      return true;
+    }
+    return false;
+  }
 }

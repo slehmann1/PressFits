@@ -12,17 +12,30 @@ export class AnalyticalResult extends Result {
     // TODO: Eliminate, pass growth corrected parts
     innerPart = PartSpecification.correctForGrowthRate(innerPart);
     outerPart = PartSpecification.correctForGrowthRate(outerPart);
+    this.calculateStressesDisplacements(innerPart, outerPart);
+    this.updateCapacities();
+  }
+  /**
+   * Calculates stresses and displacements using lames equations for thick walled cylinders
+   * @param innerPart Part specification for the inner part of the press-fit
+   * @param outerPart Part specification for the outer part of the press-fit
+   */
+  calculateStressesDisplacements(
+    innerPart: PartSpecification,
+    outerPart: PartSpecification
+  ) {
+    let R2 = Math.pow(this.R, 2);
 
     this.contactPressure = Math.abs(
       this.radialInterference /
         this.R /
         ((1 / outerPart.youngsModulus / 1000) *
-          ((Math.pow(outerPart.outerDiameter / 2, 2) + Math.pow(this.R, 2)) /
-            (Math.pow(outerPart.outerDiameter / 2, 2) - Math.pow(this.R, 2)) +
+          ((Math.pow(outerPart.outerDiameter / 2, 2) + R2) /
+            (Math.pow(outerPart.outerDiameter / 2, 2) - R2) +
             outerPart.poissonsRatio) +
           (1 / innerPart.youngsModulus / 1000) *
-            ((Math.pow(this.R, 2) + Math.pow(innerPart.innerDiameter / 2, 2)) /
-              (Math.pow(this.R, 2) - Math.pow(innerPart.innerDiameter / 2, 2)) -
+            ((R2 + Math.pow(innerPart.innerDiameter / 2, 2)) /
+              (R2 - Math.pow(innerPart.innerDiameter / 2, 2)) -
               innerPart.poissonsRatio))
     ); // EQ 3-56, Shigley's
 
@@ -101,7 +114,34 @@ export class AnalyticalResult extends Result {
       minOuterTangentialStress,
       minOuterRadialStress
     );
+  }
 
+  update(
+    innerPart: PartSpecification,
+    outerPart: PartSpecification,
+    frictionCoefficient: number,
+    length: number
+  ) {
+    console.log(innerPart);
+    console.log(outerPart);
+    this.frictionCoefficient = frictionCoefficient;
+    this.contactLength = length;
+    if (
+      !(
+        PartSpecification.equals(innerPart, this.innerPart) &&
+        PartSpecification.equals(outerPart, this.outerPart)
+      )
+    ) {
+      // A full update must be completed
+      this.innerPart = innerPart;
+      this.outerPart = outerPart;
+      this.calculateStressesDisplacements(innerPart, outerPart);
+    }
+    this.updateCapacities();
+    return this;
+  }
+
+  updateCapacities() {
     this.calcTorqueCapacity();
     this.calcFrictionCapacity();
   }

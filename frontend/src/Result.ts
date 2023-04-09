@@ -26,12 +26,18 @@ export class Result {
     this.innerPart = innerPart;
     this.outerPart = outerPart;
 
-    this.radialInterference =
-      (innerPart.outerDiameter - outerPart.innerDiameter) / 2;
-    this.R = (innerPart.outerDiameter + outerPart.innerDiameter) / 4; // Nominal radius
+    this.calcRadii(innerPart, outerPart);
+
     this.contactLength = length;
     this.frictionCoefficient = frictionCoefficient;
   }
+
+  calcRadii(innerPart: PartSpecification, outerPart: PartSpecification) {
+    this.radialInterference =
+      (innerPart.outerDiameter - outerPart.innerDiameter) / 2;
+    this.R = (innerPart.outerDiameter + outerPart.innerDiameter) / 4; // Nominal radius
+  }
+
   /**
    * Gets friction capacity of a press fit joint given a certain contact pressure. This is the axial force that can be taken.
    */
