@@ -34,7 +34,6 @@ export class FiniteElementResult extends Result {
       innerPart.outerDiameter / 2 +
       this.getDeflectionAtRadius(innerPart.outerDiameter / 2) * 1000;
 
-    // TODO: Update R with the mesh based result, not the average value
     this.contactPressure = contactPressure;
     this.calcTorqueCapacity();
     this.calcFrictionCapacity();

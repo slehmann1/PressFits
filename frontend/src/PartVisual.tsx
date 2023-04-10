@@ -60,7 +60,7 @@ class PartVisual extends React.Component<
       this.state.scalingFactors.margin -
       p0Width;
     const p0Y = this.state.scalingFactors.margin;
-    const p0Length = this.props.length * this.state.scalingFactors.yScale;
+    const p0Length = this.state.scalingFactors.yScale;
 
     const p1X =
       (this.state.p1Dims.innerDiameter / 2 +
@@ -75,7 +75,7 @@ class PartVisual extends React.Component<
       this.state.scalingFactors.margin -
       p1Width;
     const p1Y = this.state.scalingFactors.margin;
-    const p1Length = this.props.length * this.state.scalingFactors.yScale;
+    const p1Length = this.state.scalingFactors.yScale;
 
     const p0ArrowStartY = Math.min(p0Y, p1Y) - this.ARROW_PART_OFFSET;
     const p1ArrowStartY =

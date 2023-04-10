@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Mesh } from "./mesh";
+import { Mesh, Node } from "./mesh";
 import { PartVisual } from "./PartVisual";
 import { ShadedElement } from "./ShadedElement";
 import Colour from "./Colour";
@@ -54,8 +54,9 @@ class ModelVisual extends React.Component<
   }
 
   componentWillReceiveProps(props: any) {
+    let yMax = Math.max(...props.mesh.nodes.map((node: Node) => node.y));
     for (let i = 0; i < props.mesh.nodes.length; i++) {
-      props.mesh.nodes[i].setScalingFactor(this.state.scalingFactors);
+      props.mesh.nodes[i].setScalingFactor(this.state.scalingFactors, 1 / yMax);
     }
     this.setState({
       mesh: props.mesh,
@@ -161,15 +162,8 @@ class ModelVisual extends React.Component<
                 maxValue={maxStress}
                 colours={colours}
                 x={10}
-                y={
-                  this.state.scalingFactors.yRange[0] *
-                    this.state.scalingFactors.yScale +
-                  this.state.scalingFactors.margin
-                }
-                height={
-                  this.state.scalingFactors.yRange[1] *
-                  this.state.scalingFactors.yScale
-                }
+                y={this.state.scalingFactors.margin}
+                height={this.state.scalingFactors.yScale}
                 width={15}
                 units="MPa"
                 decimalPlaces={1}
@@ -182,15 +176,8 @@ class ModelVisual extends React.Component<
                 maxValue={maxDisplacement * 1000}
                 colours={colours}
                 x={10}
-                y={
-                  this.state.scalingFactors.yRange[0] *
-                    this.state.scalingFactors.yScale +
-                  this.state.scalingFactors.margin
-                }
-                height={
-                  this.state.scalingFactors.yRange[1] *
-                  this.state.scalingFactors.yScale
-                }
+                y={this.state.scalingFactors.margin}
+                height={this.state.scalingFactors.yScale}
                 width={15}
                 units="μm"
                 decimalPlaces={3}
@@ -297,10 +284,7 @@ class ModelVisual extends React.Component<
       this.ref.current.clientHeight - this.state.scalingFactors.margin * 2;
     const scalingFactor = {
       xScale: width / (this.state.scalingFactors.xRange[1] * 2),
-      yScale:
-        height /
-        (this.state.scalingFactors.yRange[1] -
-          this.state.scalingFactors.yRange[0]),
+      yScale: height,
       margin: this.state.scalingFactors.margin,
       xRange: this.state.scalingFactors.xRange,
       yRange: this.state.scalingFactors.yRange,
@@ -312,8 +296,9 @@ class ModelVisual extends React.Component<
       this.setState({
         scalingFactors: scalingFactor,
       });
+      let yMax = Math.max(...this.state.mesh.nodes.map((node) => node.y));
       for (let i = 0; i < this.state.mesh.nodes.length; i++) {
-        this.state.mesh.nodes[i].setScalingFactor(scalingFactor);
+        this.state.mesh.nodes[i].setScalingFactor(scalingFactor, 1 / yMax);
       }
     }
   }

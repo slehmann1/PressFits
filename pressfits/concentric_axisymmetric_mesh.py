@@ -22,6 +22,7 @@ class ConcentricAxisymmetricMesh(ConcentricMesh):
         len_1,
         offset_1=0,
         lines_per_part=_LINES_PER_PART,
+        should_tile=True,
     ):
         """Create a mesh for two tubes pressed over each other using an axisymmetric assumption
 
@@ -42,6 +43,13 @@ class ConcentricAxisymmetricMesh(ConcentricMesh):
         )
         self.curve_num = lines_per_part
         self.element_inp_name = "CAX8"
+
+        if should_tile:
+            p_0_multiple = math.ceil(len_0 / (od_0 - id_0) * (lines_per_part / 3))
+            p_1_multiple = math.ceil(len_0 / (od_0 - id_0) * (lines_per_part / 3))
+
+            len_0 = max(len_0, len_1) / max(p_0_multiple, p_1_multiple)
+            len_1 = max(len_0, len_1) / max(p_0_multiple, p_1_multiple)
 
         p_0_axial_spacing = self._calc_axial_spacing(
             len_0, lines_per_part, (od_0 - id_0) / 2

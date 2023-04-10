@@ -36,6 +36,7 @@ class Explanation extends React.Component {
           cautious. Stress-concentrations occur at the end of the interface
           between the two components.
         </p>
+        <p>Reference temperature for all dimensions: 20°C.</p>
       </div>
     );
   }

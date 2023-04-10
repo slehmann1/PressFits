@@ -133,7 +133,7 @@ class Solution extends React.Component {
           {this.roundToNDecimals(
             this.props.result.getOuterTempDifferential(),
             this.DECIMAL_PLACES
-          )}{" "}
+          )}
           °C
         </p>
         <p>
@@ -141,7 +141,7 @@ class Solution extends React.Component {
           {this.roundToNDecimals(
             this.props.result.getInnerTempDifferential(),
             this.DECIMAL_PLACES
-          )}{" "}
+          )}
           °C
         </p>
         <p>

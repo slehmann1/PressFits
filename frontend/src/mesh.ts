@@ -22,16 +22,21 @@ class Node {
     this.visX = x * 1000;
     this.visY = y * 1000;
   }
-  setScalingFactor(scalingFactors: {
-    xScale: number;
-    yScale: number;
-    margin: number;
-    xRange: number[];
-  }) {
+  setScalingFactor(
+    scalingFactors: {
+      xScale: number;
+      yScale: number;
+      margin: number;
+      xRange: number[];
+    },
+    elementalYScale: number
+  ) {
+    console.log(elementalYScale);
     this.visX =
       (this.x + scalingFactors.xRange[1]) * scalingFactors.xScale +
       scalingFactors.margin;
-    this.visY = this.y * scalingFactors.yScale + scalingFactors.margin;
+    this.visY =
+      this.y * scalingFactors.yScale * elementalYScale + scalingFactors.margin;
   }
 }
 
