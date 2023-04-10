@@ -18,7 +18,6 @@ export class MiscellaneousInputs extends React.Component<
   }
 
   render() {
-    console.log("Passed: " + this.props.length);
     return (
       <div className="input-block">
         <Container>

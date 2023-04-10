@@ -19,7 +19,7 @@ class Explanation extends React.Component {
           . It is only to be relied upon when the walls of both the inner and
           outer part are considered thick. A general rule of thumb is that walls
           of a cylinder are considered thick if they are at least one tenth of
-          the cylinder radius.
+          the mean cylinder radius.
         </p>
         <p>
           The finite element solution is based on the{" "}

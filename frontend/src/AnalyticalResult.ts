@@ -157,9 +157,11 @@ export class AnalyticalResult extends Result {
     pOuter: number,
     rInner: number,
     rOuter: number,
-
     r: number
   ) {
+    if (r < 0.001) {
+      return pOuter; //Eq 3-58
+    }
     return (
       (pInner * Math.pow(rInner, 2) -
         pOuter * Math.pow(rOuter, 2) -
@@ -185,6 +187,9 @@ export class AnalyticalResult extends Result {
     rOuter: number,
     r: number
   ) {
+    if (r < 0.001) {
+      return 0;
+    }
     return (
       (pInner * Math.pow(rInner, 2) -
         pOuter * Math.pow(rOuter, 2) +

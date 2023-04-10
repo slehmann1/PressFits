@@ -80,9 +80,11 @@ class PressView(REST_Views.APIView):
             return False
 
         # Check dimensions
-        if not PressView.is_positive_numbers(
-            p_0_dims
-        ) or not PressView.is_positive_numbers(p_1_dims):
+        if (
+            not PressView.is_positive_number(p_0_dims[1])
+            or not PressView.is_positive_or_zero_number(p_0_dims[0])
+            or not PressView.is_positive_numbers(p_1_dims)
+        ):
             return False
 
         # Check OD bigger than IDs
@@ -111,6 +113,15 @@ class PressView(REST_Views.APIView):
         if not isinstance(value, float) and not isinstance(value, int):
             return False
         if value <= 0:
+            return False
+
+        return True
+
+    @staticmethod
+    def is_positive_or_zero_number(value):
+        if not isinstance(value, float) and not isinstance(value, int):
+            return False
+        if value < 0:
             return False
 
         return True

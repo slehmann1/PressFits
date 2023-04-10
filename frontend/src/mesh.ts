@@ -31,7 +31,6 @@ class Node {
     },
     elementalYScale: number
   ) {
-    console.log(elementalYScale);
     this.visX =
       (this.x + scalingFactors.xRange[1]) * scalingFactors.xScale +
       scalingFactors.margin;
